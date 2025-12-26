@@ -1,0 +1,11 @@
+System blocks:
+[Pi edge] -> RNNoise -> VAD -> WS -> [Server CPU ASR] -> Translator -> DB -> WS -> Frontend
+Fallback: Pi -> Vosk offline -> local display
+
+Sequence:
+Pi -> server ws (audio frames)
+server -> asr (faster-whisper int8 CPU)
+asr -> translator (marian or cloud)
+server -> db
+server -> frontend
+

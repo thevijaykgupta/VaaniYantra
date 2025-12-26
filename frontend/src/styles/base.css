@@ -1,0 +1,71 @@
+/* ===================================================
+   VAANIYANTRA - BASE STYLES
+   =================================================== */
+
+/* FONT LOADING */
+@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=Inter:wght@400;500;600&display=swap');
+
+/* RESET & BASE STYLES */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+html {
+  width: 100%;
+  height: 100vh;
+  overflow-x: hidden;
+}
+
+body {
+  margin: 0;
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  font-family: var(--font-ui);
+  font-size: var(--text-md);
+  font-weight: 400;
+  position: relative;
+  letter-spacing: 0.02em;
+  overflow-x: hidden;
+}
+
+/* HEADINGS */
+h1, h2, h3 {
+  font-family: var(--font-display);
+  font-weight: 600;
+  color: var(--gold);
+  letter-spacing: 0.3px;
+}
+
+
+/* CINEMATIC BACKGROUND LAYERS */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  background: url("../assets/textures/bg_space_texture.svg") center / cover no-repeat;
+  opacity: 0.1;
+  z-index: -2;
+  animation: bgDrift 180s linear infinite;
+}
+
+body::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  background: url("../assets/textures/dust_overlay.svg") repeat;
+  opacity: 0.04;
+  pointer-events: none;
+  z-index: -1;
+}
+
+/* SLOW BACKGROUND DRIFT ANIMATION */
+@keyframes bgDrift {
+  0% { background-position: 0 0; }
+  100% { background-position: 200px 200px; }
+}
+

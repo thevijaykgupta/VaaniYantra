@@ -1,0 +1,86 @@
+/* SESSION HISTORY */
+
+.session-history {
+  margin-top: auto;
+  padding: 16px;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.session-history-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 12px;
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 12px;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.history-title {
+  font-size: 11px;
+}
+
+.session-history-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.session-history-item {
+  padding: 8px 10px;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  border: 1px solid transparent;
+}
+
+.session-history-item:hover {
+  background: rgba(255, 215, 128, 0.1);
+  border-color: rgba(255, 215, 128, 0.3);
+  transform: translateX(2px);
+}
+
+.session-title {
+  font-size: 13px;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.9);
+  margin-bottom: 2px;
+}
+
+.session-time {
+  font-size: 11px;
+  color: rgba(255, 255, 255, 0.5);
+}
+
+/* Collapsed sidebar */
+.sidebar.collapsed .session-history {
+  padding: 12px 8px;
+}
+
+.sidebar.collapsed .session-history-header {
+  justify-content: center;
+  margin-bottom: 8px;
+}
+
+.sidebar.collapsed .history-title {
+  display: none;
+}
+
+.sidebar.collapsed .session-history-item {
+  padding: 6px;
+  text-align: center;
+}
+
+.sidebar.collapsed .session-title {
+  font-size: 11px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.sidebar.collapsed .session-time {
+  display: none;
+}

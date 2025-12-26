@@ -1,0 +1,7 @@
+pyaudio
+webrtcvad
+rnnoise
+websockets
+vosk
+numpy
+

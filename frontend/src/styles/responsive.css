@@ -1,0 +1,50 @@
+/* =========================================
+   Tablet (≤1199px)     Mobile (≤767px)
+   ========================================= */
+
+   @media (max-width: 1199px) {
+  .sidebar {
+    width: 64px;
+  }
+  .sidebar-text {
+    display: none;
+  }
+  .chakra-container {
+    transform: scale(0.7);
+  }
+  .transcription-panels {
+    flex-direction: column;
+  }
+  .transcription-wrapper {
+    flex-direction: column;
+  }
+}
+
+@media (max-width: 767px) {
+  .sidebar {
+    position: fixed;
+    left: -240px;
+  }
+
+  .sidebar.open {
+    left: 0;
+  }
+
+  .header-title {
+    font-size: 16px;
+  }
+  .header-subtitle {
+    display: none;
+  }
+  .status-footer {
+    font-size: 10px;
+    flex-wrap: wrap;
+  }
+  .language-selector {
+    font-size: 12px;
+  }
+  .chakra-container {
+    display: none;
+  }
+}
+

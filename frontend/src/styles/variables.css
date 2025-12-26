@@ -1,0 +1,58 @@
+/* ===================================================
+   VAANIYANTRA - UNIFIED THEME SYSTEM
+   =================================================== */
+
+:root {
+  /* LAYOUT DIMENSIONS */
+  --sidebar-width: 260px;
+  --sidebar-closed-width: 0px;
+  --header-height: 87px;
+  --bottom-bar-height: 60px;
+  --status-strip-height: 32px;
+
+  /* FONT SYSTEM */
+  --font-display: 'Cinzel', serif;
+  --font-ui: 'Inter', system-ui, sans-serif;
+
+  /* FONT SIZES */
+  --text-xs: 11px;
+  --text-sm: 13px;
+  --text-md: 14px;
+  --text-lg: 16px;
+  --text-xl: 18px;
+  --text-2xl: 22px;
+
+  /* COLOR SYSTEM - BLACK → DARK GOLD THEME */
+  /* Background */
+  --bg-primary: #000000;
+  --bg-secondary: #111111;
+  --bg-dark: #0b0b0b;
+  --bg-sidebar: linear-gradient(180deg, #060606, #000);
+
+  /* Text */
+  --text-primary: #d6b25e;
+  --text-secondary: #cccccc;
+  --text-muted: #888888;
+
+  /* Gold Theme */
+  --gold: #d6b25e;
+  --gold-soft: rgba(214, 178, 94, 0.45);
+  --gold-glow: rgba(214, 178, 94, 0.25);
+  --gold-light: #e4c77a;
+  --gold-dark: #c4a85a;
+
+  /* Status Colors */
+  --status-connected: #4dc94d;
+  --status-disconnected: #c94d4d;
+  --status-reconnecting: #c9a24d;
+
+  /* Borders */
+  --border-light: rgba(214,178,94,0.25);
+  --border-accent: var(--gold);
+  --border-soft: rgba(214,178,94,0.35);
+
+  /* Shadows */
+  --shadow-light: 0 10px 30px rgba(0,0,0,0.6);
+  --shadow-glow: 0 0 12px var(--gold-glow);
+}
+

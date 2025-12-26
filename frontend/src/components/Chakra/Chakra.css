@@ -1,0 +1,129 @@
+/* ===================================================
+   CENTRAL PROCESSING AREA - LANGUAGE PROCESSING CHAKRA
+   =================================================== */
+
+.processing-area {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 900px;
+  overflow: hidden;
+  margin-bottom: 0;
+}
+
+.chakra-container {
+  position: relative;
+  max-width: 100%;
+  height: 760px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  top: -79px;
+  position: relative;
+  isolation: isolate;
+  z-index: 2;
+}
+
+.chakra-container::before {
+  content: "";
+  position: absolute;
+  inset: -120px;
+  background: radial-gradient(
+    circle,
+    rgba(230,193,122,0.12),
+    transparent 65%
+  );
+  border-radius: 50%;
+  z-index: -1;
+}
+
+/* CHAKRA RINGS */
+.chakra-ring {
+  fill: none;
+  stroke: var(--gold);
+  stroke-linecap: round;
+  transform-origin: 250px 250px;
+  filter: drop-shadow(0 0 6px rgba(230,193,122,0.15));
+}
+
+.chakra-bg-video {
+  position: relative;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  background: black;
+  z-index: 1;
+  opacity: 0.8;
+  filter:
+    contrast(1.25)
+    saturate(1.4)
+    brightness(1.1);
+  pointer-events: none;
+}
+
+/* hide chakra svg but keep structure */
+.chakra-svg {
+  display: none;
+}
+
+/* ROTATION ANIMATIONS */
+@keyframes rotate-clockwise {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+@keyframes rotate-counter {
+  from { transform: rotate(360deg); }
+  to { transform: rotate(0deg); }
+}
+
+@keyframes rotate-mixed-1 {
+  0% { transform: rotate(0deg); }
+  50% { transform: rotate(180deg); }
+  100% { transform: rotate(360deg); }
+}
+
+@keyframes rotate-mixed-2 {
+  0% { transform: rotate(360deg); }
+  50% { transform: rotate(180deg); }
+  100% { transform: rotate(0deg); }
+}
+
+/* PULSE ANIMATION - Only for 2 middle rings during speech */
+@keyframes chakra-pulse {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.015); }
+  100% { transform: scale(1); }
+}
+
+.chakra-ring.pulse-active {
+  animation: chakra-pulse 1.2s ease-in-out infinite;
+}
+
+
+/* =========================================
+   CHAKRA STATUS INDICATOR
+   ========================================= */
+
+.status-text {
+  font-size: 14px;
+  font-weight: 500;
+  color: rgba(230,193,122,0.8);
+  text-shadow:
+    0 0 10px rgba(230,193,122,0.5),
+    0 0 20px rgba(230,193,122,0.3);
+  transition: all 0.3s ease;
+}
+
+.status-text.active {
+  color: var(--gold);
+  text-shadow:
+    0 0 15px rgba(216,183,106,0.8),
+    0 0 30px rgba(216,183,106,0.5);
+}
+
