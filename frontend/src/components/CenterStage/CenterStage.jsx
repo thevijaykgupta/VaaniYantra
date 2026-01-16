@@ -6,10 +6,11 @@ import SessionBar from "../SessionBar/SessionBar.jsx"
 import CenterStageChakra from "./CenterStageChakra/CenterStageChakra.jsx";
 import CenterStagePanels from "./CenterStagePanels/CenterStagePanels.jsx";
 
-useEffect(() => {
-  startMicStreaming();
-}, []);
 export default function CenterStage() {
+  useEffect(() => {
+    startMicStreaming();
+  }, []);
+
   return (
     <div className="center-stage glass-panels">
       <SessionBar/>
