@@ -1,8 +1,16 @@
 import logging
-from .config import WHISPER_MODEL, WHISPER_COMPUTE
-from .utils import run_blocking
+import config
+
+WHISPER_MODEL = config.WHISPER_MODEL
+WHISPER_COMPUTE = config.WHISPER_COMPUTE
+SAMPLE_RATE = config.SAMPLE_RATE
+import utils
+
+run_blocking = utils.run_blocking
 from typing import Sequence
 from pathlib import Path
+import numpy as np
+from scipy.io import wavfile
 
 logger = logging.getLogger("asr")
 

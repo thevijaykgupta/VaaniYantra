@@ -1,25 +1,30 @@
-import React from "react";
-import Header from "./components/Header/Header";
-import Sidebar from "./components/Sidebar/Sidebar";
-import Chakra from "./components/Chakra/Chakra";
-import OriginalTranscription from "./components/Transcription/OriginalTranscription";
-import LiveTranslation from "./components/Transcription/LiveTranslation";
-import StatusFooter from "./components/Status/StatusFooter";
-import TranslationSettings from "./components/views/TranslationSettings";
-import SpeakerDiarization from "./components/views/SpeakerDiarization";
-import TranscriptHistory from "./components/views/TranscriptHistory";
-import AppAnalytics from "./components/views/AppAnalytics";
-import OfflineMode from "./components/views/OfflineMode";
-import AuthModal from "./components/auth/AuthModal";
-import ProfileSetup from "./components/auth/ProfileSetup";
-import OnboardingModal from "./components/auth/OnboardingModal";
-import SessionBar from "./components/Header/SessionBar";
-import Toast from "./components/common/Toast";
-import { useAppState } from "./context/AppStateContext";
+import React, { useEffect } from "react";
+import Header from "./components/Header/Header.jsx";
+import Sidebar from "./components/Sidebar/Sidebar.jsx";
+import Chakra from "./components/Chakra/Chakra.jsx";
+import OriginalTranscription from "./components/Transcription/OriginalTranscription.jsx";
+import LiveTranslation from "./components/Transcription/LiveTranslation.jsx";
+import StatusFooter from "./components/Status/StatusFooter.jsx";
+import TranslationSettings from "./components/views/TranslationSettings.jsx";
+import SpeakerDiarization from "./components/views/SpeakerDiarization.jsx";
+import TranscriptHistory from "./components/views/TranscriptHistory.jsx";
+import AppAnalytics from "./components/views/AppAnalytics.jsx";
+import OfflineMode from "./components/views/OfflineMode.jsx";
+import AuthModal from "./components/auth/AuthModal.jsx";
+import ProfileSetup from "./components/auth/ProfileSetup.jsx";
+import OnboardingModal from "./components/auth/OnboardingModal.jsx";
+import Toast from "./components/common/Toast.jsx";
+import { useAppState } from "./context/AppStateContext.jsx";
+import CenterStage from "./components/CenterStage/CenterStage.jsx";
+import { connectAudioSocket } from "./services/audioSocket.js";
 
 function App() {
+
+  useEffect(() => {
+  connectAudioSocket("frontend_test");
+  },[]);
+
   const {
-    connectionState,
     demoMode,
     user,
     sidebarOpen,
@@ -28,14 +33,10 @@ function App() {
     currentSubject,
     transcriptionData,
     toasts,
-    addToast,
     removeToast,
-    setSidebarOpen,
     setActiveView,
     loginUser,
-    logoutUser,
-    completeProfile,
-    setConnectionStatus
+    logoutUser
   } = useAppState();
 
   // Show auth modal for authentication (not for demo users)
@@ -55,81 +56,66 @@ function App() {
     }} />;
   }
 
+const renderMainContent = () => {
+  switch (activeView) {
+    case "LIVE":
+      return <CenterStage />;
 
-  const renderMainContent = () => {
-    switch (activeView) {
-      case "LIVE":
-        return (
-          <>
-            {/* Central Processing Area - Language Processing Chakra */}
-            <section className="processing-area">
-              <Chakra />
+    case "SETTINGS":
+      return (
+        <div className="main-content-flex">
+          <section className="processing-area">
+            <Chakra />
+          </section>
+          <TranslationSettings />
+        </div>
+      );
 
+    case "DIARIZATION":
+      return <SpeakerDiarization transcriptionData={demoMode ? [] : transcriptionData} />;
 
-              {/* Transcription Panels Overlay */}
-              <section className="transcription-section overlay-panels">
-                <OriginalTranscription transcriptionData={demoMode ? [] : transcriptionData} />
-                <LiveTranslation transcriptionData={demoMode ? [] : transcriptionData} />
-              </section>
-            </section>
+    case "OFFLINE":
+      return <OfflineMode />;
 
+    case "HISTORY":
+      return <TranscriptHistory />;
 
-          </>
-        );
+    case "ANALYTICS":
+      return <AppAnalytics />;
 
-      case "SETTINGS":
-        return (
-          <div className="main-content-flex">
-            {/* Central Processing Area - Language Processing Chakra (scaled down) */}
-            <section className="processing-area">
-              <Chakra />
-            </section>
-
-            {/* Settings Panel */}
-            <TranslationSettings />
-          </div>
-        );
-
-      case "DIARIZATION":
-        return <SpeakerDiarization transcriptionData={demoMode ? [] : transcriptionData} />;
-
-      case "OFFLINE":
-        return <OfflineMode />;
-
-      case "HISTORY":
-        return <TranscriptHistory />;
-
-      case "ANALYTICS":
-        return <AppAnalytics />;
-
-      default:
-        return null;
-    }
-  };
+    default:
+      return null;
+  }
+};
 
   return (
-    <div className="app-layout">
-      <Sidebar
-        sidebarOpen={sidebarOpen}
-        activeView={activeView}
-        onViewChange={setActiveView}
+  <div className="app-root">
+
+    {/* SIDEBAR */}
+    <Sidebar
+      sidebarOpen={sidebarOpen}
+      activeView={activeView}
+      onViewChange={setActiveView}
+    />
+
+
+    {/* MAIN AREA */}
+    {/* <div className={`app-main ${sidebarOpen ? "with-sidebar" : "full"}`}> */}
+    <div className={`app-layout ${sidebarOpen ? "sidebar-open" : "sidebar-closed"}`}>
+
+      {/* TOP HEADER */}
+      <Header
+        user={user}
+        onShowAuth={() => setShowAuth(true)}
+        onLogout={logoutUser}
       />
+      {
+        renderMainContent()
+      }
 
-
-      <div className={`main-content ${sidebarOpen ? 'shifted' : 'full'}`}>
-        <Header
-          user={user}
-          onShowAuth={() => setShowAuth(true)}
-          onLogout={logoutUser}
-        />
-
-        <SessionBar />
-
-        {renderMainContent()}
-
-        <StatusFooter />
-
-        {/* Toast Notifications */}
+      {/* BOTTOM BAR */}
+      <StatusFooter />
+      {/* TOASTS */}
         {toasts.map(toast => (
           <Toast
             key={toast.id}
@@ -138,9 +124,9 @@ function App() {
             onClose={() => removeToast(toast.id)}
           />
         ))}
-      </div>
     </div>
-  );
+  </div>
+);
 }
 
 export default App;

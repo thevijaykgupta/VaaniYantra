@@ -1,5 +1,6 @@
 import { createContext, useContext, useState, useEffect } from "react";
-
+import { connectAudioWS } from "../services/audioSocket";
+import { connectAudioSocket } from "../services/audioSocket";
 const AppStateContext = createContext();
 
 export const AppStateProvider = ({ children }) => {
@@ -11,8 +12,14 @@ export const AppStateProvider = ({ children }) => {
     latency: 0
   });
   const [demoMode, setDemoMode] = useState(false);
-  const [user, setUser] = useState(null);
-  const [sidebarOpen, setSidebarOpen] = useState(window.innerWidth > 1024);
+  const [user, setUser] = useState({
+    name:"Vijay",
+    email:"demo@vaaniyantra.ai",
+    // avatar:null,
+    photo:"/assets/profile/avatar.jpg"
+  });
+  const [currentView, setCurrentView]=useState("home");
+  const [sidebarOpen, setSidebarOpen] = useState(true);
   const [activeView, setActiveView] = useState("LIVE");
   const [sessionName, setSessionName] = useState("Classroom Lecture – DSP");
   const [currentSubject, setCurrentSubject] = useState("Digital Signal Processing");
@@ -25,6 +32,7 @@ export const AppStateProvider = ({ children }) => {
   ]);
   const [targetLanguages, setTargetLanguages] = useState(['hi', 'ta']);
   const [transcriptionData, setTranscriptionData] = useState([]);
+  const [transcripts, setTranscripts] = useState([]);
   const [error, setError] = useState(null);
   const [micPermission, setMicPermission] = useState(null);
   const [offlineMode, setOfflineMode] = useState(false);
@@ -50,8 +58,9 @@ export const AppStateProvider = ({ children }) => {
   // Handle window resize for sidebar
   useEffect(() => {
     const handleResize = () => {
-      const isDesktop = window.innerWidth >= 1025;
-      setSidebarOpen(isDesktop);
+      if(window.innerWidth <1024){
+        setSidebarOpen(false)
+      }
     };
 
     // Set initial state
@@ -75,6 +84,64 @@ export const AppStateProvider = ({ children }) => {
     }
   };
 
+  useEffect(() => {
+    const roomId = "classroom_1";
+
+    connectAudioWS(
+      roomId,
+      (msg) => {
+        if(msg.type === "transcript"){
+          setTranscriptionData(prev => [...prev,msg.payload]);
+        }
+      },
+      (status)=>{
+        setConnectionStatus(status);
+      }
+    );
+  },
+  []);
+
+  useEffect(() => {
+    const ws = new WebSocket("ws://localhost:8000/ws/audio/classroom1");
+    ws.onmessage = (event) => {
+      try {
+        const data = JSON.parse(event.data);
+        if (msg?.type === "transcript" && msg.payload);
+        setTranscripts(prev => {
+          const exists = prev.some(t => t.id === msg.payload.id);
+          if (exists) return prev;
+          return [msg.payload, ...prev];
+        });
+      }catch(e){
+        console.error("WS parse error",e);
+      }
+    };
+    return()=> ws.close();
+  }, []);
+
+  const getSessions = () => {
+    const map = {};
+    transcripts.forEach(t => {
+      const date = new Date(t.created_at).toLocaleDateString();
+      const key = `${t.room_id}-${date}`;
+      if (!map[key]) {
+        map[key] = {
+          id: key,
+          room_id: t.room_id,
+          date,
+          lastTime: t.created_at,
+          count:0,
+          transcripts: []
+        };
+      }
+      map[key].count += 1;
+      map[key].transcripts.push(t);
+      if(new Date(t.created_at) > new Date(map[key].lastTime)){
+        map[key].lastTime = t.created_at;
+      }
+    });
+    return Object.values(map).sort((a,b) => new Date(b.lastTime) - new Date(a.lastTime));
+  }
   const logoutUser = () => {
     setUser(null);
     localStorage.removeItem("user");
@@ -95,6 +162,16 @@ export const AppStateProvider = ({ children }) => {
   const clearTranscription = () => {
     setTranscriptionData([]);
   };
+
+  const loadTranscripts = async (roomId = "classroom1") => {
+    try {
+      const res = await fetch('http://localhost:8000/transcripts?roomid=${roomId}');
+      const data = await res.json();
+      setTranscripts(data.items || []);
+    }catch(err){
+      console.error("Failed to load transcripts:", err);
+    }
+  }
 
   const setConnectionStatus = (status) => {
     switch (status) {
@@ -159,19 +236,26 @@ export const AppStateProvider = ({ children }) => {
       connectionState,
       demoMode,
       user,
+      setUser,
       sidebarOpen,
       activeView,
       sessionName,
       currentSubject,
+      currentView,
       transcriptionData,
       error,
+      transcripts,
+      getSessions,
 
       // Actions
+      setTranscripts,
       setDemoMode,
       setSidebarOpen,
       setActiveView,
       setSessionName,
       setCurrentSubject,
+      setCurrentView,
+      setTranscriptionData,
       availableSubjects,
       setAvailableSubjects,
       setError,
@@ -182,6 +266,7 @@ export const AppStateProvider = ({ children }) => {
       removeToast,
       loginUser,
       logoutUser,
+      loadTranscripts,
       completeProfile,
       addTranscriptionLine,
       clearTranscription,

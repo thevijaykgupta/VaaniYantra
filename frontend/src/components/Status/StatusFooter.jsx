@@ -1,8 +1,17 @@
 import { FileText, File, Subtitles, Braces, BarChart, Users, Settings, Play } from 'lucide-react';
-import { useAppState } from "../../context/AppStateContext";
+import { useAppState } from "../../context/AppStateContext.jsx";
+import "./StatusFooter.css";
 
 function StatusFooter() {
   const { connectionState, demoMode, transcriptionData, addToast } = useAppState();
+
+  const generateSRT = (data) => {
+    data.map((line,i)=>{
+      const start ='00:00:${String(i*3)).padStart(2,"0)},000';
+      const end ='00:00:${String(i*3+2)).padStart(2,"0)},999';
+      return `${i+1}\n${start} --> ${end}\n${line.text}\n\n`;
+    }).join('\n');
+  }
 
   const handleExportPDF = () => {
     addToast('PDF export coming soon!', 'info');
@@ -13,21 +22,32 @@ function StatusFooter() {
   };
 
   const handleExportSRT = () => {
-    if (transcriptionData.length > 0) {
-      // SRT export logic would go here
-      addToast('SRT exported successfully!', 'success');
-    } else {
+    if (!transcriptionData.length) {
       addToast('No transcription data to export', 'warning');
+      return;
     }
+    downloadFile('transcription.srt', generateSRT(transcriptionData));
+    addToast('SRT exported successfully!', 'success');
   };
 
   const handleExportJSON = () => {
-    if (transcriptionData.length > 0) {
-      // JSON export logic would go here
-      addToast('JSON exported successfully!', 'success');
-    } else {
+    if(!transcriptionData.length){
       addToast('No transcription data to export', 'warning');
+      return;
     }
+    downloadFile('transcription.json', JSON.stringify(transcriptionData, null, 2));
+    addToast('JSON exported successfully!', 'success');
+  };
+  const downloadFile = (filename, content) => {
+    const blob=new Blob([content], { type});
+    const url=URL.createObjectURL(blob);
+    const a=document.createElement('a');
+    a.href=url;
+    a.download=filename;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
   };
 
   return (
@@ -36,16 +56,16 @@ function StatusFooter() {
       <div className="bottom-actions">
         {/* LEFT CONTROLS - Icons only */}
         <div className="left-controls">
-          <button className="icon-btn">
+          <button className="icon-btn" onClick={() => setActiveView('ANALYTICS')}>
             <BarChart size={18} />
           </button>
-          <button className="icon-btn">
+          <button className="icon-btn" onClick={() => setActiveView("DIARIZATION")}>
             <Users size={18} />
           </button>
-          <button className="icon-btn">
+          <button className="icon-btn" onClick={() => setActiveView("SETTINGS")}>
             <Settings size={18} />
           </button>
-          <button className="icon-btn">
+          <button className="icon-btn" onClick={() => setActiveView("LIVE")}>
             <Play size={18} />
           </button>
         </div>
@@ -76,25 +96,6 @@ function StatusFooter() {
         </span>
       </div>
 
-      {/* SYSTEM STATUS STRIP */}
-      <div className="system-strip">
-        {/* MODEL INFO */}
-        <div className="model-info">
-          ASR: Whisper | Translation: MarianMT | Audio: Live
-        </div>
-
-        {/* DEMO MODE */}
-        {demoMode && (
-          <div className="demo-indicator">
-            Demo Mode Active
-          </div>
-        )}
-
-        {/* CONNECTION HEALTH - Icons */}
-        <div className="connection-health">
-          {/* Cloud icon, check icon, green dot would go here */}
-        </div>
-      </div>
     </footer>
   );
 }

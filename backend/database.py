@@ -7,8 +7,11 @@ from contextlib import contextmanager
 from sqlalchemy import create_engine
 from sqlalchemy.orm import Session, sessionmaker
 
-from .config import DATABASE_URL
-from .models import Base
+import config
+import models
+
+DATABASE_URL = config.DATABASE_URL
+Base = models.Base
 
 engine = create_engine(
     DATABASE_URL,

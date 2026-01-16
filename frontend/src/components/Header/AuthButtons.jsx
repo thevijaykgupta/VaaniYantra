@@ -49,10 +49,10 @@ function AuthButtons({ user, onShowAuth, onLogout }) {
 
   return (
     <div className="auth-buttons">
-      <button className="auth-btn login" onClick={onShowAuth}>
+      <button className="header-auth-btn login auth-btn" onClick={onShowAuth("login")}>
         Login
       </button>
-      <button className="auth-btn signup primary" onClick={onShowAuth}>
+      <button className="header-auth-btn signup primary auth-btn" onClick={onShowAuth("signup")}>
         Sign Up
       </button>
     </div>

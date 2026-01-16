@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import './Chakra.css';
 import chakraVideo from '../../assets/videos/vaaniyantra_bg.mp4';
 
-import { useAppState } from '../../context/AppStateContext';
+import { useAppState } from '../../context/AppStateContext.jsx';
 
 const listeningText = {
   en: "Listening for speech…",
@@ -13,6 +13,22 @@ const listeningText = {
   bn: "কথা শুনছে…",
   mr: "वाणी ऐकत आहे…"
 };
+
+// export default function Chakra() {
+//   return (
+//     <video
+//       src={chakraVideo}
+//       autoPlay
+//       loop
+//       muted
+//       style={{
+//         width: "400px",
+//         height: "400px",
+//         border: "2px solid red",
+//       }}
+//     />
+//   );
+// }
 
 function Chakra() {
   const { connectionState, connected, reconnecting, targetLanguages } = useAppState();
@@ -56,25 +72,25 @@ function Chakra() {
       </video>
 
 
-      {/* LANGUAGE PROCESSING CHAKRA SVG */}
+      {/* LANGUAGE PROCESSING CHAKRA SVG
       <svg className="chakra-svg" viewBox="0 0 500 500" xmlns="http://www.w3.org/2000/svg">
         {/* Chakra rings would be defined here */}
-        <defs>
+        {/* <defs>
           <radialGradient id="chakraGradient" cx="50%" cy="50%" r="50%">
             <stop offset="0%" style={{stopColor: 'rgba(230,193,122,0.8)', stopOpacity: 1}} />
             <stop offset="100%" style={{stopColor: 'rgba(230,193,122,0.2)', stopOpacity: 1}} />
           </radialGradient>
-        </defs>
+        </defs> */}
 
         {/* Outer rings */}
-        <circle cx="250" cy="250" r="200" fill="none" stroke="rgba(230,193,122,0.3)" strokeWidth="2" className="chakra-ring" />
+        {/* <circle cx="250" cy="250" r="200" fill="none" stroke="rgba(230,193,122,0.3)" strokeWidth="2" className="chakra-ring" />
         <circle cx="250" cy="250" r="150" fill="none" stroke="rgba(230,193,122,0.4)" strokeWidth="2" className="chakra-ring" />
         <circle cx="250" cy="250" r="100" fill="none" stroke="rgba(230,193,122,0.5)" strokeWidth="3" className="chakra-ring" />
-        <circle cx="250" cy="250" r="50" fill="none" stroke="url(#chakraGradient)" strokeWidth="4" className="chakra-ring" />
+        <circle cx="250" cy="250" r="50" fill="none" stroke="url(#chakraGradient)" strokeWidth="4" className="chakra-ring" /> */} 
 
         {/* Center dot */}
-        <circle cx="250" cy="250" r="8" fill="rgba(230,193,122,0.9)" />
-      </svg>
+        {/* <circle cx="250" cy="250" r="8" fill="rgba(230,193,122,0.9)" />
+      </svg> */}
     </div>
   );
 }

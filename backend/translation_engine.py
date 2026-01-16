@@ -1,6 +1,9 @@
 import logging
-from .config import TRANSLATION_BACKEND
-from .utils import run_blocking
+import config
+import utils
+
+TRANSLATION_BACKEND = config.TRANSLATION_BACKEND
+run_blocking = utils.run_blocking
 
 logger = logging.getLogger("translator")
 

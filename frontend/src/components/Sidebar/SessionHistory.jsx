@@ -1,36 +1,29 @@
-import { useState } from 'react';
-import { Clock } from 'lucide-react';
-import { useAppState } from '../../context/AppStateContext';
+import { Clock } from "lucide-react";
+import { useAppState } from "../../context/AppStateContext";
 
 function SessionHistory() {
-  const { setSessionName, setCurrentSubject, setTranscriptionData } = useAppState();
+  const {
+    transcripts,
+    setSessionName,
+    setCurrentSubject,
+    setTranscriptionData,
+  } = useAppState();
 
-  // Mock session history data
-  const [sessionHistory] = useState([
-    {
-      id: 1,
-      title: 'DSP – Fourier Transform',
-      time: 'Today, 12:45 PM',
-      subject: 'Digital Signal Processing'
-    },
-    {
-      id: 2,
-      title: 'Data Structures – Trees',
-      time: 'Yesterday, 3:20 PM',
-      subject: 'Data Structures'
-    },
-    {
-      id: 3,
-      title: 'ML – Neural Networks',
-      time: 'Yesterday, 10:15 AM',
-      subject: 'Machine Learning'
-    }
-  ]);
+  // Create sessions from transcripts
+  const recentSessions = [...transcripts]
+    .slice(0, 5)
+    .map(t => ({
+      id: t.id,
+      title: t.room_id,
+      time: new Date(t.created_at).toLocaleTimeString(),
+      room_id: t.room_id,
+      transcript: t,
+    }));
 
   const handleSessionClick = (session) => {
-    setSessionName(session.title);
-    setCurrentSubject(session.subject);
-    setTranscriptionData([]); // Clear current transcription
+    setSessionName(`${session.room_id}-${session.id}`);
+    setCurrentSubject(session.room_id);
+    setTranscriptionData([session.transcript]);
   };
 
   return (
@@ -41,7 +34,7 @@ function SessionHistory() {
       </div>
 
       <div className="session-history-list">
-        {sessionHistory.map(session => (
+        {recentSessions.map(session => (
           <div
             key={session.id}
             className="session-history-item"

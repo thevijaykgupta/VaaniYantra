@@ -1,0 +1,45 @@
+.lang-wrapper{
+    position: relative;
+}
+.lang-pill{
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 14px;
+    border: 1px solid var(--gold);
+    border-radius: 999px;
+    background: rgba(0,0,0,0.45);
+    color: var(--gold);
+    cursor: pointer;
+}
+.lang-pill:hover{
+    background: rgba(214, 178,94,0.12);
+}
+.lang-dropdown{
+    position: absolute;
+    top: calc(100%+8px);
+    right: 0;
+    min-width: 160px;
+    background: linear-gradient(180deg,#141414,#0b0b0b);
+    border: 1px solid rgba(214,178,94,0.25);
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 20px 50px rgba(0,0,0,0.6);
+    z-index: 1000;
+    overflow: hidden;
+}
+.lang-dropdown button{
+    width: 100%;
+    padding: 10px 14px;
+    background: none;
+    border: none;
+    text-align: left;
+    font-size: 14px;
+    color: #e6e6e6;
+    cursor: pointer;
+}
+.lang-dropdown button:hover{
+    background: rgba(214,178,94,0.1);
+    color: var(--gold);
+}

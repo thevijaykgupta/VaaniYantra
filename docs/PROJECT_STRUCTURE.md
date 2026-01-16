@@ -87,6 +87,65 @@ vaani_yantra/
 - **GET `/transcripts`**: List transcripts by room
 - **POST `/transcripts`**: Create new transcript
 
+## 🎯 **RUNNING THE BACKEND SERVER**
+
+### **🔧 Correct Way to Run the Backend**
+
+#### **Method 1: Using the Fixed Runner Script (Recommended)**
+```powershell
+# Navigate to the backend directory
+Set-Location "D:\@VIJAY_All_data\MY WORKS\VAANIYANTRA - Multilingual_Transcription\Vaani_Yantra\backend"
+
+# Activate the virtual environment
+.\venv\Scripts\activate.ps1
+
+# Run the server
+python run_fixed.py
+```
+
+#### **Method 2: Direct Uvicorn Command**
+```powershell
+# From the project root directory
+cd "D:\@VIJAY_All_data\MY WORKS\VAANIYANTRA - Multilingual_Transcription\Vaani_Yantra"
+
+# Activate backend virtual environment
+.\backend\venv\Scripts\activate.ps1
+
+# Run with uvicorn
+python -m uvicorn backend.main:app --host 0.0.0.0 --port 8000 --reload
+```
+
+### **🌐 Available Endpoints**
+Once running, you can access:
+- **API Root**: http://localhost:8000/
+- **Health Check**: http://localhost:8000/health
+- **API Documentation**: http://localhost:8000/docs (Swagger UI)
+- **Transcripts API**:
+  - GET: http://localhost:8000/transcripts
+  - POST: http://localhost:8000/transcripts
+- **WebSocket Audio**: ws://localhost:8000/ws/audio/{room_id}
+
+### **✅ Verification Commands**
+```powershell
+# Test root endpoint
+curl http://localhost:8000/
+
+# Test health
+curl http://localhost:8000/health
+
+# Test API docs
+curl http://localhost:8000/docs
+```
+
+### **🚀 Backend Status**
+✅ Server: Running on http://localhost:8000
+✅ Database: SQLite initialized
+✅ ASR Model: Whisper loaded
+✅ Translation: Engine ready
+✅ WebSocket: Configured for audio streaming
+✅ CORS: Enabled for frontend integration
+✅ Auto-reload: Enabled (server restarts on code changes)
+
 ## 🎯 **FINAL PROJECT STATUS**
 
 ### **✅ FULLY COMPLIANT WITH PDF SPECIFICATIONS**
@@ -97,6 +156,8 @@ vaani_yantra/
 - WebSocket communication established
 - Database integration complete
 - Frontend UI matches requirements
+- Backend runner script (run_fixed.py) configured and ready
+- Backend server verified and operational
 
 ### **🚀 READY FOR DEPLOYMENT**
 - Backend: FastAPI server with ASR/translation

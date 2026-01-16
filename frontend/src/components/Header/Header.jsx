@@ -1,28 +1,102 @@
+import { useState } from "react";
 import AuthButtons from "./AuthButtons";
-import { LANGUAGES } from "../../utils/constants";
+import LanguageSelector from "./LanguageSelector";
+import "./Header.css";
+import { useAppState } from "../../context/AppStateContext";
 
-function Header({ user, onShowAuth, onLogout }) {
+function Header({ onShowAuth, onLogout }) {
+  const { user, setActiveView } = useAppState();
+  const [showProfileMenu, setShowProfileMenu] = useState(false);
+
   return (
     <header className="top-header">
+      {/* ================= LEFT ================= */}
       <div className="header-left">
+        <div className="logo-container">
+          <img src="/logo.png" alt="VAANIYANTRA" className="logo" />
+        </div>
+
         <div className="brand-info">
           <h1 className="brand-title">VAANIYANTRA</h1>
-          <p className="brand-subtitle">Where Every Language Speaks Every Language</p>
+          <p className="brand-subtitle">
+            Where Every Language Speaks Every Language
+          </p>
         </div>
       </div>
 
+      {/* ================= RIGHT ================= */}
       <div className="header-right">
-        <select className="language-selector">
-          {LANGUAGES.map(lang => (
-            <option key={lang.code} value={lang.code}>{lang.name}</option>
-          ))}
-        </select>
+        <LanguageSelector />
 
-        <AuthButtons
-          user={user}
-          onShowAuth={onShowAuth}
-          onLogout={onLogout}
-        />
+        {/* ================= AUTH ================= */}
+        {!user ? (
+          <AuthButtons onShowAuth={onShowAuth} />
+        ) : (
+          <div className="profile-wrapper">
+            <div
+              className="profile-pill"
+              onClick={() => setShowProfileMenu(prev => !prev)}
+            >
+              <img
+                src={user.photoURL || "/assets/default-avatar.png"}
+                alt="User"
+                className="profile-avatar"
+              />
+              <span className="profile-name">
+                Hello, {user.name || "User"}
+              </span>
+              <span className="caret">▼</span>
+            </div>
+
+            {showProfileMenu && (
+              <>
+                <div className="profile-dropdown">
+                  <button
+                    className="dropdown-item"
+                    onClick={() => {
+                      setActiveView("PROFILE");
+                      setShowProfileMenu(false);
+                    }}
+                  >
+                    My Profile
+                  </button>
+
+                  <button
+                    className="dropdown-item"
+                    onClick={() => {
+                      setActiveView("HISTORY");
+                      setShowProfileMenu(false);
+                    }}
+                  >
+                    Session History
+                  </button>
+
+                  <button
+                    className="dropdown-item"
+                    onClick={() => {
+                      setActiveView("SETTINGS");
+                      setShowProfileMenu(false);
+                    }}
+                  >
+                    Account Settings
+                  </button>
+
+                  <button
+                    className="dropdown-item danger"
+                    onClick={onLogout}
+                  >
+                    Logout
+                  </button>
+                </div>
+
+                <div
+                  className="menu-overlay"
+                  onClick={() => setShowProfileMenu(false)}
+                />
+              </>
+            )}
+          </div>
+        )}
       </div>
     </header>
   );

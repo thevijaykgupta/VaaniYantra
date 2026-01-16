@@ -14,6 +14,12 @@ frontend/
 ├── index.html                   # Main HTML structure
 ├── styles.css                   # Enhanced cinematic styles
 └── script.js                    # Interactive functionality
+<TopBar>
+ ├─ Left: Logo + VAANIYANTRA
+ ├─ Center: Session → Language → Latency
+ └─ Right: Language dropdown + Profile
+</TopBar>
+
 ```
 
 ## 🎨 Visual Enhancements

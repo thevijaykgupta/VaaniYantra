@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useAppState } from '../../context/AppStateContext';
+import { useAppState } from '../../context/AppStateContext.jsx';
 import './Views.css';
 
 function OfflineMode() {

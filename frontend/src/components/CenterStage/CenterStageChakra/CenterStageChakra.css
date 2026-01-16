@@ -1,0 +1,12 @@
+.center-chakra-block {
+  position: relative;
+
+  height: 420px; /* 🔒 fixed like reference */
+  max-height: 420px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  overflow: hidden;
+}

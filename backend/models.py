@@ -4,8 +4,7 @@ from __future__ import annotations
 
 from datetime import datetime
 from typing import List, Optional
-
-from pydantic import BaseModel
+from pydantic import ConfigDict,BaseModel
 from sqlalchemy import Column, DateTime, Integer, String, Text
 from sqlalchemy.orm import declarative_base
 
@@ -27,7 +26,7 @@ class TranscriptCreate(BaseModel):
     room_id: str
     speaker: str
     text: str
-    translation: Optional[str] = None
+    translation: str
 
 
 class TranscriptRead(BaseModel):
@@ -35,7 +34,7 @@ class TranscriptRead(BaseModel):
     room_id: str
     speaker: str
     text: str
-    translation: Optional[str] = None
+    translation: str
     created_at: datetime
 
     class Config:

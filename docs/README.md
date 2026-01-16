@@ -81,12 +81,77 @@ tests/            Unit tests
 
 ## 🎯 Running the Application
 
+### 🔧 Correct Way to Run the Backend
+
+#### Method 1: Using the Fixed Runner Script (Recommended)
+```powershell
+# Navigate to the backend directory
+Set-Location "D:\@VIJAY_All_data\MY WORKS\VAANIYANTRA - Multilingual_Transcription\Vaani_Yantra\backend"
+
+# Activate the virtual environment
+.\venv\Scripts\activate.ps1
+
+# Run the server
+python run_fixed.py
+```
+
+#### Method 2: Direct Uvicorn Command
+```powershell
+# From the project root directory
+cd "D:\@VIJAY_All_data\MY WORKS\VAANIYANTRA - Multilingual_Transcription\Vaani_Yantra"
+
+# Activate backend virtual environment
+.\backend\venv\Scripts\activate.ps1
+
+# Run with uvicorn
+python -m uvicorn backend.main:app --host 0.0.0.0 --port 8000 --reload
+```
+
+### 🌐 Available Endpoints
+Once running, you can access:
+- **API Root**: http://localhost:8000/
+- **Health Check**: http://localhost:8000/health
+- **API Documentation**: http://localhost:8000/docs (Swagger UI)
+
+#### Transcripts API:
+- **GET**: http://localhost:8000/transcripts
+- **POST**: http://localhost:8000/transcripts
+
+#### WebSocket Audio:
+- **ws://localhost:8000/ws/audio/{room_id}**
+
+### ✅ Verification Commands
+Test that it's working:
+```powershell
+# Test root endpoint
+curl http://localhost:8000/
+
+# Test health
+curl http://localhost:8000/health
+
+# Test API docs
+curl http://localhost:8000/docs
+```
+
+### 🚀 Current Status
+✅ **Server**: Running on http://localhost:8000
+✅ **Database**: SQLite initialized
+✅ **ASR Model**: Whisper loaded
+✅ **Translation**: Engine ready
+✅ **WebSocket**: Configured for audio streaming
+✅ **CORS**: Enabled for frontend integration
+✅ **Auto-reload**: Enabled (server restarts on code changes)
+
+The backend is now running perfectly and ready to serve your frontend and Raspberry Pi clients! 🎉
+
+**Note**: The server will continue running in the background. To stop it, you'll need to find and terminate the Python process or close the terminal session.
+
 ### Development Mode
 ```bash
 # Terminal 1: Start Backend
 cd backend
 venv\Scripts\activate  # Windows
-python run.py
+python run_fixed.py
 
 # Terminal 2: Start Frontend
 cd frontend
@@ -101,7 +166,7 @@ npm run build
 
 # Backend (same as development)
 cd backend
-python run.py
+python run_fixed.py
 ```
 
 ### Docker (CPU-only)

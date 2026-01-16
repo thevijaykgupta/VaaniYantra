@@ -1,9 +1,6 @@
 /* ===================================================
-   VAANIYANTRA - BASE STYLES
+   VAANIYANTRA - PREMIUM BASE STYLES
    =================================================== */
-
-/* FONT LOADING */
-@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=Inter:wght@400;500;600&display=swap');
 
 /* RESET & BASE STYLES */
 * {
@@ -19,26 +16,29 @@ html {
   width: 100%;
   height: 100vh;
   overflow-x: hidden;
-}
-
-body {
   margin: 0;
-  background: var(--bg-primary);
-  color: var(--text-primary);
-  font-family: var(--font-ui);
-  font-size: var(--text-md);
-  font-weight: 400;
-  position: relative;
-  letter-spacing: 0.02em;
-  overflow-x: hidden;
+  background: var(--bg-main);
 }
 
-/* HEADINGS */
+/* PREMIUM FONT SYSTEM */
+body {
+  font-family: var(--font-primary);
+  font-size: 14px;
+  line-height: 1.4;
+  color: var(--text-primary);
+  margin: 0;
+  overflow-x: hidden;
+  background: var(--bg-main);
+  font-weight: 400;
+  letter-spacing: 0.02em;
+}
+
+/* HEADINGS - PREMIUM STYLE */
 h1, h2, h3 {
   font-family: var(--font-display);
   font-weight: 600;
-  color: var(--gold);
-  letter-spacing: 0.3px;
+  color: var(--gold-main);
+  letter-spacing: 0.04em;
 }
 
 

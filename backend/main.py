@@ -3,23 +3,44 @@ import base64
 import json
 import logging
 
-from fastapi import FastAPI, WebSocket, WebSocketDisconnect
+from fastapi import FastAPI, WebSocket, WebSocketDisconnect,HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 
-from . import config
-from .asr_whisper import WhisperASR
-from .database import init_db, session_scope
-from .models import Transcript, TranscriptCreate, TranscriptList, TranscriptRead
-from .translation_engine import Translator
-from .utils import run_blocking, timestamp_now
-from .websocket_manager import ConnectionManager
+import config
+import asr_whisper
+import database
+import models
+import translation_engine
+import utils
+import websocket_manager
+
+from fastapi.responses import FileResponse
+import tempfile
+from reportlab.lib.pagesizes import A4
+from reportlab.pdfgen import canvas
+
+WhisperASR = asr_whisper.WhisperASR
+init_db = database.init_db
+session_scope = database.session_scope
+Transcript = models.Transcript
+TranscriptCreate = models.TranscriptCreate
+TranscriptRead = models.TranscriptRead
+TranscriptList = models.TranscriptList
+Translator = translation_engine.Translator
+run_blocking = utils.run_blocking
+timestamp_now = utils.timestamp_now
+ConnectionManager = websocket_manager.ConnectionManager
+
 
 logger = logging.getLogger("backend")
 
 app = FastAPI(title="Vaani Yantra Backend", version="1.0.0")
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=[
+        "http://localhost:3000",
+        "http://127.0.0.1:3000"
+    ],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -36,22 +57,49 @@ async def on_startup():
     logger.info("Database initialized")
 
 
+@app.get("/")
+async def root():
+    """Root endpoint providing API information."""
+    return {
+        "message": "Vaani Yantra Backend API",
+        "version": "1.0.0",
+        "docs": "/docs",
+        "health": "/health",
+        "endpoints": {
+            "GET /": "API information",
+            "GET /health": "Health check",
+            "GET /transcripts": "List transcripts",
+            "POST /transcripts": "Create transcript",
+            "WebSocket /ws/audio/{room_id}": "Audio streaming"
+        }
+    }
+
+
 @app.get("/health")
 async def health():
     return {"status": "ok", "time": timestamp_now()}
 
 
-@app.get("/transcripts", response_model=TranscriptList)
-async def list_transcripts(room_id: str = config.ROOM_ID, limit: int = 50):
+@app.get("/transcripts/{transcript_id}/download")
+def download_transcript(transcript_id: int, format: str = "pdf"):
     with session_scope() as session:
-        query = (
-            session.query(Transcript)
-            .filter(Transcript.room_id == room_id)
-            .order_by(Transcript.created_at.desc())
-            .limit(limit)
-        )
-        items = [serialize_transcript(row) for row in query.all()]
-    return {"items": items}
+        transcript = session.query(Transcript).get(transcript_id)
+
+        if not transcript:
+            raise HTTPException(status_code=404, detail="Transcript not found")
+
+    if format == "pdf":
+        temp = tempfile.NamedTemporaryFile(delete=False, suffix=".pdf")
+        c = canvas.Canvas(temp.name, pagesize=A4)
+        c.drawString(50, 800, f"Room: {transcript.room_id}")
+        c.drawString(50, 780, f"Speaker: {transcript.speaker}")
+        c.drawString(50, 740, transcript.text)
+        c.drawString(50, 700, "Translation:")
+        c.drawString(50, 680, transcript.translation)
+        c.save()
+        return FileResponse(temp.name, filename="transcript.pdf")
+
+    raise HTTPException(status_code=400, detail="Unsupported format")
 
 
 @app.post("/transcripts", response_model=TranscriptRead)
@@ -75,9 +123,11 @@ def serialize_transcript(row: Transcript) -> dict:
 
 
 async def process_audio_chunk(room_id: str, pcm_bytes: bytes):
-    """Process audio chunk: ASR -> Translation -> Save -> Broadcast."""
-    # Run ASR
-    segments = await run_blocking(asr._transcribe_sync, pcm_bytes)
+    try:
+        segments = await run_blocking(asr._transcribe_sync, pcm_bytes)
+    except Exception as e:
+        logger.warning("ASR skipped on PC: %s", e)
+        return
 
     for seg in segments:
         text = seg["text"]
