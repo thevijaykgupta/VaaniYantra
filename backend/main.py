@@ -102,6 +102,16 @@ def download_transcript(transcript_id: int, format: str = "pdf"):
     raise HTTPException(status_code=400, detail="Unsupported format")
 
 
+@app.get("/transcripts")
+def list_transcripts(room_id: str | None = None):
+    with session_scope() as db:
+        q = db.query(Transcript)
+        if room_id:
+            q = q.filter(Transcript.room_id == room_id)
+
+        items = q.order_by(Transcript.created_at.desc()).all()
+        return {"items": [serialize_transcript(t) for t in items]}
+
 @app.post("/transcripts", response_model=TranscriptRead)
 async def create_transcript(payload: TranscriptCreate):
     with session_scope() as session:
@@ -180,5 +190,76 @@ async def websocket_endpoint(ws: WebSocket, room_id: str):
         logger.exception("WebSocket failure: %s", exc)
         await manager.disconnect(ws, topic=room_id)
         await ws.close()
+
+
+# ==============================
+# 🔥 DEBUG TRANSCRIPTION (TEST AUDIO)
+# ==============================
+@app.post("/debug/transcribe")
+async def debug_transcribe():
+    """
+    Test the complete audio → whisper → translation pipeline
+    WITHOUT UI, WITHOUT WebSocket
+    """
+    test_audio_path = "test.wav"
+
+    if not os.path.exists(test_audio_path):
+        return {
+            "error": "test.wav not found",
+            "message": "Place a WAV file named 'test.wav' in the backend directory to test transcription"
+        }
+
+    try:
+        # Read audio file
+        with open(test_audio_path, "rb") as f:
+            audio_bytes = f.read()
+
+        logger.info(f"Testing transcription with {len(audio_bytes)} bytes of audio data")
+
+        # Process with Whisper
+        segments = asr._transcribe_sync(audio_bytes)
+
+        if not segments:
+            return {
+                "error": "No speech detected",
+                "message": "The audio file appears to be silent or contains no recognizable speech"
+            }
+
+        results = []
+        for seg in segments:
+            text = seg.get("text", "").strip()
+            if not text:
+                continue
+
+            # Translate the text
+            translation = translator.translate(text)
+
+            results.append({
+                "original_text": text,
+                "translated_text": translation,
+                "confidence": seg.get("confidence", 0),
+                "start_time": seg.get("start", 0),
+                "end_time": seg.get("end", 0)
+            })
+
+        return {
+            "status": "SUCCESS",
+            "message": f"Successfully transcribed {len(results)} text segments",
+            "total_segments": len(segments),
+            "successful_segments": len(results),
+            "transcription_results": results,
+            "model_info": {
+                "asr_model": "faster-whisper",
+                "translation_model": "marianmt"
+            }
+        }
+
+    except Exception as e:
+        logger.error(f"Debug transcription failed: {e}")
+        return {
+            "error": "Transcription failed",
+            "details": str(e),
+            "message": "Check backend logs for more details"
+        }
 
 

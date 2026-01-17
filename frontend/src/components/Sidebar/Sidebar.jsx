@@ -14,7 +14,7 @@ import history from "../../assets/sidebar/history.svg";
 import settings from "../../assets/sidebar/settings.svg";
 import chevron from "../../assets/sidebar/chevron.svg";
 
-function Sidebar({ sidebarOpen, activeView, onViewChange }) {
+function Sidebar({ sidebarOpen, activeView, onViewChange, toggleSidebar }) {
   const { addToast } = useAppState();
 
   // ALL OPEN BY DEFAULT
@@ -32,7 +32,16 @@ function Sidebar({ sidebarOpen, activeView, onViewChange }) {
 
   return (
     <>
-      <aside className={`sidebar ${sidebarOpen ? "open" : "closed"}`}>
+      {/* SIDEBAR TOGGLE BUTTON */}
+      <button
+        className={`sidebar-toggle ${sidebarOpen ? "sidebar-open" : "sidebar-closed"}`}
+        onClick={toggleSidebar}
+        title={sidebarOpen ? "Close sidebar" : "Open sidebar"}
+      >
+        {sidebarOpen ? "✕" : "☰"}
+      </button>
+
+      <aside className={`sidebar ${sidebarOpen ? "open" : "collapsed"}`}>
         <div className="sidebar-inner">
 
           {/* ================= CAPTURE ================= */}

@@ -43,64 +43,164 @@ function TranscriptHistory() {
     return () => ws.close();
   }, []);
 
-  // 3️ Transcript detail view
+  // 3️ Transcript detail view - Beautiful Design
   if (selectedTranscript) {
     return (
-      <div className="transcript-viewer">
-        <button onClick={() => setSelectedTranscript(null)}>← Back</button>
+      <div className="transcript-detail-view">
+        <div className="detail-header">
+          <button
+            className="back-btn"
+            onClick={() => setSelectedTranscript(null)}
+          >
+            ← Back to History
+          </button>
+          <div className="transcript-info">
+            <h2 className="transcript-title">📄 Transcript #{selectedTranscript.id}</h2>
+            <div className="transcript-meta">
+              <span className="meta-item">
+                🕒 {new Date(selectedTranscript.created_at).toLocaleString()}
+              </span>
+              <span className="meta-item">
+                🏠 Room: {selectedTranscript.room_id}
+              </span>
+              <span className="meta-item">
+                👤 Speaker: {selectedTranscript.speaker || 'Unknown'}
+              </span>
+            </div>
+          </div>
+        </div>
 
-        <h2>Transcript #{selectedTranscript.id}</h2>
-        <p>{new Date(selectedTranscript.created_at).toLocaleString()}</p>
+        <div className="transcript-content-grid">
+          <div className="content-card original-card">
+            <div className="card-header">
+              <h3 className="card-title">
+                <span className="lang-icon">🇺🇸</span>
+                Original Text (English)
+              </h3>
+            </div>
+            <div className="card-body">
+              <div className="speaker-tag">
+                <span className="speaker-avatar">{(selectedTranscript.speaker || 'S')[0].toUpperCase()}</span>
+                <span className="speaker-name">{selectedTranscript.speaker || 'Speaker'}</span>
+              </div>
+              <p className="transcript-text original-text">
+                {selectedTranscript.text || 'No original text available'}
+              </p>
+            </div>
+          </div>
 
-        <h3>Original</h3>
-        <p><b>{selectedTranscript.speaker}:</b> {selectedTranscript.text}</p>
+          <div className="content-card translation-card">
+            <div className="card-header">
+              <h3 className="card-title">
+                <span className="lang-icon">🇮🇳</span>
+                Translation (हिंदी)
+              </h3>
+            </div>
+            <div className="card-body">
+              <div className="speaker-tag">
+                <span className="speaker-avatar">{(selectedTranscript.speaker || 'S')[0].toUpperCase()}</span>
+                <span className="speaker-name">{selectedTranscript.speaker || 'Speaker'}</span>
+              </div>
+              <p className="transcript-text translation-text">
+                {selectedTranscript.translation || 'No translation available'}
+              </p>
+            </div>
+          </div>
+        </div>
 
-        <h3>Translation</h3>
-        <p><b>{selectedTranscript.speaker}:</b> {selectedTranscript.translation}</p>
+        <div className="export-actions">
+          <h4>Download Options</h4>
+          <div className="export-buttons">
+            <button onClick={() => handleDownload('pdf')} className="export-btn">
+              📄 PDF
+            </button>
+            <button onClick={() => handleDownload('docx')} className="export-btn">
+              📝 DOCX
+            </button>
+            <button onClick={() => handleDownload('srt')} className="export-btn">
+              🎬 SRT
+            </button>
+            <button onClick={() => handleDownload('json')} className="export-btn">
+              💾 JSON
+            </button>
+          </div>
+        </div>
       </div>
     );
   }
 
-  // 4️ Transcript list (DB history)
+  // 4️ Transcript list (DB history) - Modern Card Design
   return (
   <div className="history-view">
     <div className="history-header">
-      <h2 className="history-title">Transcript History</h2>
+      <h2 className="history-title">📜 Transcript History</h2>
       <p className="history-subtitle">
-        Access and manage your past transcription sessions
+        Access and manage your past transcription sessions with beautiful, organized cards
       </p>
     </div>
 
-    <div className="history-table">
-      <div className="table-header">
-        <div>Date & Time</div>
-        <div>Room</div>
-        <div>Duration</div>
-        <div>Languages</div>
-        <div>Speaker</div>
-        <div>Action</div>
-      </div>
+    <div className="history-grid">
+      {transcripts.length > 0 ? (
+        transcripts.map(t => (
+          <div
+            key={t.id}
+            className="history-card"
+            onClick={() => setSelectedTranscript(t)}
+          >
+            <div className="card-header">
+              <h3 className="session-title">
+                <span className="session-icon">🎙</span>
+                Session #{t.id}
+              </h3>
+              <span className="session-date">
+                {new Date(t.created_at).toLocaleDateString()}
+              </span>
+            </div>
 
-      {transcripts.map(t => (
-        <div key={t.id} className="table-row">
-          <div>
-            {new Date(t.created_at).toLocaleDateString()} <br />
-            {new Date(t.created_at).toLocaleTimeString()}
+            <div className="session-meta">
+              <div className="meta-item">
+                <span className="meta-icon">🏠</span>
+                <span>Room: {t.room_id}</span>
+              </div>
+              <div className="meta-item">
+                <span className="meta-icon">👤</span>
+                <span>Speaker: {t.speaker || 'Unknown'}</span>
+              </div>
+              <div className="meta-item">
+                <span className="meta-icon">🌐</span>
+                <span>Languages: EN → HI</span>
+              </div>
+            </div>
+
+            <div className="card-content">
+              <p className="transcript-preview">
+                {t.text ? t.text.substring(0, 120) + (t.text.length > 120 ? '...' : '') : 'No transcript content available'}
+              </p>
+            </div>
+
+            <div className="card-actions">
+              <button
+                className="view-btn"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setSelectedTranscript(t);
+                }}
+              >
+                👁 View Details
+              </button>
+              <span className="session-date">
+                {new Date(t.created_at).toLocaleTimeString()}
+              </span>
+            </div>
           </div>
-          <div>{t.room_id}</div>
-          <div>—</div>
-          <div>EN → HI</div>
-          <div>{t.speaker}</div>
-          <div>
-            <button
-              className="view-btn"
-              onClick={() => setSelectedTranscript(t)}
-            >
-              View
-            </button>
-          </div>
+        ))
+      ) : (
+        <div className="empty-state">
+          <div className="empty-icon">📝</div>
+          <h3>No Transcripts Yet</h3>
+          <p>Start a live transcription session to see your history here.</p>
         </div>
-      ))}
+      )}
     </div>
   </div>
 );

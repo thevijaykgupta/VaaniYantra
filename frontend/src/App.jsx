@@ -35,6 +35,7 @@ function App() {
     toasts,
     removeToast,
     setActiveView,
+    setSidebarOpen,
     loginUser,
     logoutUser
   } = useAppState();
@@ -83,6 +84,112 @@ const renderMainContent = () => {
     case "ANALYTICS":
       return <AppAnalytics />;
 
+    case "TRANSCRIPT":
+      return (
+        <div className="main-content-flex">
+          <section className="processing-area">
+            <Chakra />
+          </section>
+          <div className="transcript-view">
+            <div className="transcript-header">
+              <h2>Current Session Transcript</h2>
+              <div className="transcript-info">
+                <span className="session-title">{sessionName}</span>
+                <span className="subject-tag">{currentSubject}</span>
+              </div>
+            </div>
+
+            <div className="transcript-content">
+              {transcriptionData.length > 0 ? (
+                transcriptionData.map((item, index) => (
+                  <div key={index} className="transcript-item">
+                    <div className="speaker-info">
+                      <span className="speaker">{item.speaker || 'Speaker'}</span>
+                      <span className="timestamp">{item.timestamp || new Date().toLocaleTimeString()}</span>
+                    </div>
+                    <div className="transcript-text">
+                      <p className="original">{item.text}</p>
+                      {item.translation && (
+                        <p className="translation">{item.translation}</p>
+                      )}
+                    </div>
+                  </div>
+                ))
+              ) : (
+                <div className="empty-state">
+                  <div className="empty-icon">📝</div>
+                  <h3>No transcript yet</h3>
+                  <p>Start a live transcription to see your session content here.</p>
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+      );
+
+    case "PROFILE":
+      return (
+        <div className="main-content-flex">
+          <section className="processing-area">
+            <Chakra />
+          </section>
+          <div className="profile-view">
+            <div className="profile-header">
+              <h2>My Profile</h2>
+            </div>
+
+            <div className="profile-content">
+              <div className="profile-card">
+                <div className="profile-avatar-large">
+                  <img
+                    src={user?.photo || "https://api.dicebear.com/7.x/avataaars/svg?seed=User"}
+                    alt="Profile"
+                    className="avatar-img"
+                  />
+                </div>
+
+                <div className="profile-details">
+                  <div className="detail-group">
+                    <label>Name</label>
+                    <span>{user?.name || "User"}</span>
+                  </div>
+
+                  <div className="detail-group">
+                    <label>Email</label>
+                    <span>{user?.email || "demo@vaaniyantra.ai"}</span>
+                  </div>
+
+                  <div className="detail-group">
+                    <label>Account Type</label>
+                    <span>Premium User</span>
+                  </div>
+
+                  <div className="detail-group">
+                    <label>Member Since</label>
+                    <span>January 2025</span>
+                  </div>
+                </div>
+
+                <div className="profile-stats">
+                  <div className="stat">
+                    <span className="stat-number">42</span>
+                    <span className="stat-label">Sessions</span>
+                  </div>
+                  <div className="stat">
+                    <span className="stat-number">1.2K</span>
+                    <span className="stat-label">Minutes</span>
+                  </div>
+                  <div className="stat">
+                    <span className="stat-number">5</span>
+                    <span className="stat-label">Languages</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      );
+
     default:
       return null;
   }
@@ -96,6 +203,7 @@ const renderMainContent = () => {
       sidebarOpen={sidebarOpen}
       activeView={activeView}
       onViewChange={setActiveView}
+      toggleSidebar={() => setSidebarOpen(!sidebarOpen)}
     />
 
 

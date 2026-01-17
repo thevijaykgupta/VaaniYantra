@@ -8,15 +8,19 @@ function Header({ onShowAuth, onLogout }) {
   const { user, setActiveView } = useAppState();
   const [showProfileMenu, setShowProfileMenu] = useState(false);
 
+  const goToHome = () => {
+    setActiveView("LIVE");
+  };
+
   return (
     <header className="top-header">
       {/* ================= LEFT ================= */}
       <div className="header-left">
-        <div className="logo-container">
-          <img src="/logo.png" alt="VAANIYANTRA" className="logo" />
+        <div className="logo-container" onClick={goToHome} style={{cursor: 'pointer'}}>
+          <img src="/logo.svg" alt="VAANIYANTRA" className="logo" />
         </div>
 
-        <div className="brand-info">
+        <div className="brand-info" onClick={goToHome} style={{cursor: 'pointer'}}>
           <h1 className="brand-title">VAANIYANTRA</h1>
           <p className="brand-subtitle">
             Where Every Language Speaks Every Language
@@ -38,7 +42,7 @@ function Header({ onShowAuth, onLogout }) {
               onClick={() => setShowProfileMenu(prev => !prev)}
             >
               <img
-                src={user.photoURL || "/assets/default-avatar.png"}
+                src={user.photo || "https://api.dicebear.com/7.x/avataaars/svg?seed=User"}
                 alt="User"
                 className="profile-avatar"
               />
