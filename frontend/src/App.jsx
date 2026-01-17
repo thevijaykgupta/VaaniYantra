@@ -14,6 +14,7 @@ import AuthModal from "./components/auth/AuthModal.jsx";
 import ProfileSetup from "./components/auth/ProfileSetup.jsx";
 import OnboardingModal from "./components/auth/OnboardingModal.jsx";
 import Toast from "./components/common/Toast.jsx";
+import RightSidebar from "./components/RightSidebar/RightSidebar.jsx";
 import { useAppState } from "./context/AppStateContext.jsx";
 import CenterStage from "./components/CenterStage/CenterStage.jsx";
 import { connectAudioSocket } from "./services/audioSocket.js";
@@ -40,8 +41,20 @@ function App() {
     logoutUser
   } = useAppState();
 
+  // Auto-manage sidebar visibility based on active view
+  React.useEffect(() => {
+    // Keep sidebar open for main content views, close for utility views
+    const shouldKeepOpen = ['LIVE', 'TRANSCRIPT', 'HISTORY'].includes(activeView);
+    if (sidebarOpen !== shouldKeepOpen) {
+      setSidebarOpen(shouldKeepOpen);
+    }
+  }, [activeView, setSidebarOpen]);
+
   // Show auth modal for authentication (not for demo users)
   const [showAuth, setShowAuth] = React.useState(false);
+
+  // Right sidebar state
+  const [rightSidebarOpen, setRightSidebarOpen] = React.useState(false);
 
   // Show auth modal when requested
   if (showAuth) {
@@ -223,6 +236,12 @@ const renderMainContent = () => {
 
       {/* BOTTOM BAR */}
       <StatusFooter />
+      {/* RIGHT SIDEBAR */}
+      <RightSidebar
+        isOpen={rightSidebarOpen}
+        onToggle={() => setRightSidebarOpen(!rightSidebarOpen)}
+      />
+
       {/* TOASTS */}
         {toasts.map(toast => (
           <Toast

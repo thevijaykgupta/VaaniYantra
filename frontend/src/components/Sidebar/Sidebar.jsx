@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { useAppState } from "../../context/AppStateContext";
-import SessionHistory from "./SessionHistory";
 import TranslationSettings from "../overlays/TranslationSettings";
 import SpeakerDiarization from "../overlays/SpeakerDiarization";
 import "./Sidebar.css";
@@ -159,8 +158,6 @@ function Sidebar({ sidebarOpen, activeView, onViewChange, toggleSidebar }) {
               </div>
             )}
           </div>
-
-          <SessionHistory />
         </div>
       </aside>
 
