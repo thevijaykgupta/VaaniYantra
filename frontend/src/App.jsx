@@ -21,9 +21,10 @@ import { connectAudioSocket } from "./services/audioSocket.js";
 
 function App() {
 
-  useEffect(() => {
-  connectAudioSocket("classroom_1");
-  },[]);
+  // WebSocket connection is now handled in AppStateContext
+  // useEffect(() => {
+  // connectAudioSocket("classroom_1");
+  // },[]);
 
   const {
     demoMode,

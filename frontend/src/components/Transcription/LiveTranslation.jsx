@@ -40,14 +40,16 @@ try {
 
   // Update translations when transcription data changes
   useEffect(() => {
+    console.log("🌐 LiveTranslation received data:", transcriptionData);
     if (transcriptionData.length > 0) {
-      const newTranslations = transcriptionData.map((data, index) => ({
-        id: Date.now() + index,
+      const newTranslations = transcriptionData.map((data) => ({
+        id: data.id || Date.now(),
         speaker: data.speaker || 'Speaker A',
         originalText: data.text || '',
-        translatedText: simulateTranslation(data.text || ''),
-        timestamp: new Date()
+        translatedText: data.translation || data.text || '', // Use real translation from backend
+        timestamp: data.created_at ? new Date(data.created_at) : new Date()
       }));
+      console.log("🌐 Setting translation lines:", newTranslations);
       setTranslationLines(prev => [...prev, ...newTranslations]);
     }
   }, [transcriptionData]);

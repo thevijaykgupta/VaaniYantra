@@ -17,15 +17,17 @@ function OriginalTranscription({ transcriptionData = [] }) {
   ]);
   const [isExpanded, setIsExpanded] = useState(true);
 
-  // Simulate adding transcription lines
+  // Update transcription lines when data changes
   useEffect(() => {
+    console.log("📝 OriginalTranscription received data:", transcriptionData);
     if (transcriptionData.length > 0) {
       const newLines = transcriptionData.map((data) => ({
-  id: crypto.randomUUID(),
-  speaker: data.speaker || 'Speaker A',
-  text: data.text || '',
-  timestamp: new Date()
-  }));
+        id: data.id || crypto.randomUUID(),
+        speaker: data.speaker || 'Speaker A',
+        text: data.text || '',
+        timestamp: data.created_at ? new Date(data.created_at) : new Date()
+      }));
+      console.log("📝 Setting transcription lines:", newLines);
       setTranscriptionLines(prev => [...prev, ...newLines]);
     }
   }, [transcriptionData]);

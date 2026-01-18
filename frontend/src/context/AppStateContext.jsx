@@ -42,16 +42,21 @@ export const AppStateProvider = ({ children }) => {
     const storedUser = localStorage.getItem("user");
     const onboardingComplete = localStorage.getItem("onboardingComplete") === "true";
 
-    if (!storedUser) {
-      // New user - enable demo mode
-      setDemoMode(true);
-      setConnectionStatus('DEMO');
-    } else {
-      // Returning user - disable demo mode
-      setUser(JSON.parse(storedUser));
-      setDemoMode(false);
-      setConnectionStatus('CONNECTED');
-    }
+    // Temporarily disable demo mode for testing real functionality
+    setDemoMode(false);
+    setConnectionStatus('CONNECTED');
+
+    // Original logic (commented out for testing):
+    // if (!storedUser) {
+    //   // New user - enable demo mode
+    //   setDemoMode(true);
+    //   setConnectionStatus('DEMO');
+    // } else {
+    //   // Returning user - disable demo mode
+    //   setUser(JSON.parse(storedUser));
+    //   setDemoMode(false);
+    //   setConnectionStatus('CONNECTED');
+    // }
   }, []);
 
   // Handle window resize for sidebar
@@ -84,106 +89,51 @@ export const AppStateProvider = ({ children }) => {
   };
 
   useEffect(() => {
-    const roomId = "classroom_1";
+    const roomId = "classroom1";
 
     connectAudioWS(
       roomId,
       (msg) => {
+        console.log("🔥 Received WebSocket message:", msg);
         if(msg.type === "transcript"){
-          setTranscriptionData(prev => [...prev,msg.payload]);
+          console.log("📝 Adding transcript:", msg.payload);
+          setTranscriptionData(prev => {
+            console.log("📊 Updating transcriptionData:", [...prev, msg.payload]);
+            return [...prev, msg.payload];
+          });
+
+          // Also add to transcripts history
+          setTranscripts(prev => {
+            const exists = prev.some(t => t.id === msg.payload.id);
+            if (exists) return prev;
+            return [msg.payload, ...prev];
+          });
         }
       },
       (status)=>{
-        setConnectionStatus(status);
+        console.log("🔌 WebSocket status:", status);
+        if (status === 'CONNECTED') {
+          setConnectionState(prev => ({
+            ...prev,
+            backend: true,
+            websocket: true,
+            audio: true,
+            status: 'connected'
+          }));
+        } else if (status === 'DISCONNECTED') {
+          setConnectionState(prev => ({
+            ...prev,
+            websocket: false,
+            audio: false,
+            status: 'disconnected'
+          }));
+        }
       }
     );
   },
   []);
 
-  // Realtime connection monitoring with latency
-  useEffect(() => {
-    let pingInterval;
-    let lastPingTime = 0;
-
-    const checkConnection = () => {
-      const ws = new WebSocket("ws://localhost:8000/ws/audio/classroom1");
-
-      ws.onopen = () => {
-        console.log("WebSocket connected for monitoring");
-        setConnectionState(prev => ({
-          ...prev,
-          backend: true,
-          websocket: true,
-          status: 'connected'
-        }));
-
-        // Start ping-pong for latency measurement
-        pingInterval = setInterval(() => {
-          if (ws.readyState === WebSocket.OPEN) {
-            lastPingTime = Date.now();
-            ws.send(JSON.stringify({ type: "ping" }));
-          }
-        }, 5000); // Ping every 5 seconds
-      };
-
-      ws.onmessage = (event) => {
-        try {
-          const data = JSON.parse(event.data);
-
-          if (data.type === "pong" && lastPingTime > 0) {
-            // Calculate latency
-            const latency = Date.now() - lastPingTime;
-            setConnectionState(prev => ({
-              ...prev,
-              latency: latency,
-              audio: true
-            }));
-          }
-
-          if (data.type === "transcript") {
-            setTranscripts(prev => {
-              const exists = prev.some(t => t.id === data.payload.id);
-              if (exists) return prev;
-              return [data.payload, ...prev];
-            });
-          }
-        } catch(e) {
-          console.error("WS parse error", e);
-        }
-      };
-
-      ws.onclose = () => {
-        console.log("WebSocket closed");
-        setConnectionState(prev => ({
-          ...prev,
-          websocket: false,
-          audio: false,
-          status: 'disconnected',
-          latency: 0
-        }));
-        clearInterval(pingInterval);
-      };
-
-      ws.onerror = (error) => {
-        console.error("WebSocket error:", error);
-        setConnectionState(prev => ({
-          ...prev,
-          websocket: false,
-          status: 'disconnected',
-          latency: 0
-        }));
-      };
-
-      return ws;
-    };
-
-    const ws = checkConnection();
-
-    return () => {
-      if (ws) ws.close();
-      clearInterval(pingInterval);
-    };
-  }, []);
+  // Connection status and transcript handling is now managed by the main audio WebSocket
 
   const getSessions = () => {
     const map = {};
