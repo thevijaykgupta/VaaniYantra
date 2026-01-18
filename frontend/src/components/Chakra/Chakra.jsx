@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import './Chakra.css';
 import chakraVideo from '../../assets/videos/vaaniyantra_bg.mp4';
-
+import { startMicStreaming } from '../../services/micStreamer.js';
 import { useAppState } from '../../context/AppStateContext.jsx';
 
 const listeningText = {
@@ -9,7 +9,7 @@ const listeningText = {
   hi: "वाणी सुन रहा है…",
   ta: "பேச்சைக் கேட்கிறது…",
   kn: "ಮಾತನ್ನು ಕೇಳುತ್ತಿದೆ…",
-  te: "మాటలను వింటోంది…",
+  te: "ಮಾತನ್ನು ಕೇಳುತ್ತಿದೆ…",
   bn: "কথা শুনছে…",
   mr: "वाणी ऐकत आहे…"
 };
@@ -31,9 +31,11 @@ const listeningText = {
 // }
 
 function Chakra() {
-  const { connectionState, connected, reconnecting, targetLanguages } = useAppState();
+  const { connectionState, connected, reconnecting, targetLanguages, addToast } = useAppState();
   const [isSpeechDetected, setIsSpeechDetected] = useState(false);
   const [speechDetectionTimeout, setSpeechDetectionTimeout] = useState(null);
+  const [isRecording, setIsRecording] = useState(false);
+  const [micStream, setMicStream] = useState(null);
 
 
   const updateSpeechDetection = (speechActive) => {
@@ -56,8 +58,52 @@ function Chakra() {
     }
   };
 
+  const startCapture = async () => {
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      setMicStream(stream);
+      setIsRecording(true);
+      addToast('Audio capture started', 'success');
+      // Start the audio processing
+      await startMicStreaming();
+    } catch (error) {
+      console.error('Error accessing microphone:', error);
+      addToast('Microphone access denied. Please check permissions.', 'error');
+    }
+  };
+
+  const stopCapture = () => {
+    if (micStream) {
+      micStream.getTracks().forEach(track => track.stop());
+      setMicStream(null);
+    }
+    setIsRecording(false);
+    addToast('Audio capture stopped', 'info');
+  };
+
   return (
     <div className="chakra-container">
+      {/* CAPTURE BUTTON */}
+      <div className="capture-controls">
+        <button
+          className={`capture-btn ${isRecording ? 'recording' : ''}`}
+          onClick={isRecording ? stopCapture : startCapture}
+        >
+          <div className="capture-icon">
+            {isRecording ? '⏹️' : '🎤'}
+          </div>
+          <div className="capture-text">
+            {isRecording ? 'Stop Capture' : 'Start Capture'}
+          </div>
+        </button>
+        {isRecording && (
+          <div className="recording-indicator">
+            <span className="recording-dot"></span>
+            Recording...
+          </div>
+        )}
+      </div>
+
       {/* BACKGROUND VIDEO */}
       <video
         className="chakra-bg-video"
@@ -86,7 +132,7 @@ function Chakra() {
         {/* <circle cx="250" cy="250" r="200" fill="none" stroke="rgba(230,193,122,0.3)" strokeWidth="2" className="chakra-ring" />
         <circle cx="250" cy="250" r="150" fill="none" stroke="rgba(230,193,122,0.4)" strokeWidth="2" className="chakra-ring" />
         <circle cx="250" cy="250" r="100" fill="none" stroke="rgba(230,193,122,0.5)" strokeWidth="3" className="chakra-ring" />
-        <circle cx="250" cy="250" r="50" fill="none" stroke="url(#chakraGradient)" strokeWidth="4" className="chakra-ring" /> */} 
+        <circle cx="250" cy="250" r="50" fill="none" stroke="url(#chakraGradient)" strokeWidth="4" className="chakra-ring" /> */}
 
         {/* Center dot */}
         {/* <circle cx="250" cy="250" r="8" fill="rgba(230,193,122,0.9)" />

@@ -22,7 +22,7 @@ import { connectAudioSocket } from "./services/audioSocket.js";
 function App() {
 
   useEffect(() => {
-  connectAudioSocket("frontend_test");
+  connectAudioSocket("classroom_1");
   },[]);
 
   const {
