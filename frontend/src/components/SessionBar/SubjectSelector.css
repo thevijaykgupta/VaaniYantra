@@ -1,0 +1,74 @@
+.subject-wrapper {
+  position: relative;
+}
+
+/* Pill */
+.subject-pill {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 14px;
+  border-radius: 999px;
+  background: rgba(0,0,0,0.45);
+  border: 1px solid var(--gold-soft);
+  color: var(--gold);
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.subject-pill:hover {
+  background: rgba(214,178,94,0.1);
+  box-shadow: var(--shadow-glow);
+}
+
+.caret {
+  font-size: 12px;
+  opacity: 0.8;
+}
+
+/* Dropdown */
+.subject-dropdown {
+  position: absolute;
+  top: calc(100% + 8px);
+  left: 0;
+  min-width: 220px;
+  background: linear-gradient(180deg, #141414, #0c0c0c);
+  border: 1px solid var(--gold-soft);
+  border-radius: 10px;
+  box-shadow: 0 14px 40px rgba(0,0,0,0.9);
+  z-index: 1000;
+  overflow: hidden;
+}
+
+.subject-dropdown button {
+  width: 100%;
+  padding: 10px 14px;
+  background: none;
+  border: none;
+  color: var(--text-primary);
+  text-align: left;
+  cursor: pointer;
+}
+
+.subject-dropdown button:hover {
+  background: rgba(214,178,94,0.1);
+  color: var(--gold);
+}
+
+.divider {
+  height: 1px;
+  background: rgba(255,255,255,0.05);
+  margin: 6px 0;
+}
+
+.add-subject {
+  color: var(--gold);
+  font-weight: 600;
+}
+
+/* Overlay */
+.overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 999;
+}

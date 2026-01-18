@@ -7,18 +7,18 @@ from contextlib import contextmanager
 from sqlalchemy import create_engine
 from sqlalchemy.orm import Session, sessionmaker
 
-from .config import DATABASE_URL
-from .models import Base
+import config
+import models
 
 engine = create_engine(
-    DATABASE_URL,
-    connect_args={"check_same_thread": False} if DATABASE_URL.startswith("sqlite") else {},
+    config.DATABASE_URL,
+    connect_args={"check_same_thread": False} if config.DATABASE_URL.startswith("sqlite") else {},
 )
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
 
 def init_db() -> None:
-    Base.metadata.create_all(bind=engine)
+    models.Base.metadata.create_all(bind=engine)
 
 
 @contextmanager

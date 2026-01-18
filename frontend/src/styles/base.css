@@ -1,9 +1,6 @@
 /* ===================================================
-   VAANIYANTRA - BASE STYLES
+   VAANIYANTRA - PREMIUM BASE STYLES
    =================================================== */
-
-/* FONT LOADING */
-@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=Inter:wght@400;500;600&display=swap');
 
 /* RESET & BASE STYLES */
 * {
@@ -19,26 +16,67 @@ html {
   width: 100%;
   height: 100vh;
   overflow-x: hidden;
-}
-
-body {
   margin: 0;
-  background: var(--bg-primary);
-  color: var(--text-primary);
-  font-family: var(--font-ui);
-  font-size: var(--text-md);
-  font-weight: 400;
-  position: relative;
-  letter-spacing: 0.02em;
-  overflow-x: hidden;
+  background: var(--bg-main);
 }
 
-/* HEADINGS */
-h1, h2, h3 {
+/* PREMIUM FONT SYSTEM */
+body {
+  font-family: var(--font-primary);
+  font-size: 14px;
+  line-height: 1.5;
+  color: var(--text-primary);
+  margin: 0;
+  overflow-x: hidden;
+  background: var(--bg-main);
+  font-weight: 400;
+  letter-spacing: 0.01em;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* HEADINGS - PREMIUM STYLE */
+h1, h2, h3, h4, h5, h6 {
   font-family: var(--font-display);
   font-weight: 600;
-  color: var(--gold);
-  letter-spacing: 0.3px;
+  color: var(--gold-main);
+  letter-spacing: 0.02em;
+  line-height: 1.2;
+  margin: 0 0 0.5em 0;
+}
+
+h1 {
+  font-size: 2.5rem;
+  font-weight: 800;
+  background: linear-gradient(135deg, var(--gold-main), var(--gold-light));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+h2 {
+  font-size: 2rem;
+  font-weight: 700;
+}
+
+h3 {
+  font-size: 1.5rem;
+  font-weight: 600;
+}
+
+h4 {
+  font-size: 1.25rem;
+  font-weight: 600;
+}
+
+h5 {
+  font-size: 1.125rem;
+  font-weight: 500;
+}
+
+h6 {
+  font-size: 1rem;
+  font-weight: 500;
 }
 
 

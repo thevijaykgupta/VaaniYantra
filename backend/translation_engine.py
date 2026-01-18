@@ -1,6 +1,6 @@
 import logging
-from .config import TRANSLATION_BACKEND
-from .utils import run_blocking
+import config
+import utils
 
 logger = logging.getLogger("translator")
 
@@ -8,7 +8,7 @@ class Translator:
     """
     Translation engine supporting local Marian or M2M100 models, or a cloud placeholder.
     """
-    def __init__(self, backend=TRANSLATION_BACKEND):
+    def __init__(self, backend=config.TRANSLATION_BACKEND):
         self.backend = backend
         self.models = {}
 

@@ -1,6 +1,6 @@
 import logging
-from .config import WHISPER_MODEL, WHISPER_COMPUTE
-from .utils import run_blocking
+import config
+import utils
 from typing import Sequence
 from pathlib import Path
 
@@ -11,7 +11,7 @@ class WhisperASR:
     CPU-optimized ASR wrapper using faster-whisper (int8) when available.
     Falls back to OpenAI Whisper if necessary (CPU-only mode).
     """
-    def __init__(self, model_name=WHISPER_MODEL, compute_type=WHISPER_COMPUTE):
+    def __init__(self, model_name=config.WHISPER_MODEL, compute_type=config.WHISPER_COMPUTE):
         self.model_name = model_name
         self.compute_type = compute_type
         self.model = None
@@ -39,7 +39,7 @@ class WhisperASR:
 
     async def transcribe_file(self, file_path: str):
         """Transcribe an audio file asynchronously."""
-        return await run_blocking(self._transcribe_sync, file_path)
+        return await utils.run_blocking(self._transcribe_sync, file_path)
 
     def _transcribe_sync(self, file_path: str):
         """Blocking transcription that returns a list of segments."""

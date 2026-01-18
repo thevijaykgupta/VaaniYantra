@@ -1,8 +1,29 @@
 import { useState, useEffect } from 'react';
 import './Transcription.css';
+import { useAppState } from '../../context/AppStateContext.jsx';
+
+const listeningText = {
+  en: "Listening for speech…",
+  hi: "वाणी सुन रहा है…",
+  ta: "பேச்சைக் கேட்கிறது…",
+  kn: "ಮಾತನ್ನು ಕೇಳುತ್ತಿದೆ…",
+  te: "మాటలను వింటోంది…",
+  bn: "কথা শুনছে…",
+  mr: "वाणी ऐकत आहे…"
+};
 
 function LiveTranslation({ transcriptionData = [] }) {
   const [translationLines, setTranslationLines] = useState([]);
+let selectedLang = 'en';
+
+try {
+  const appState = useAppState();
+  selectedLang = appState?.targetLanguages?.[0] || 'en';
+} catch (e) {
+  // Context not available — fallback safely
+  selectedLang = 'en';
+}
+  // const selectedLang = targetLanguages?.[0] || 'en';
   const [isExpanded, setIsExpanded] = useState(true);
 
   // Simple mock translation function
@@ -19,14 +40,16 @@ function LiveTranslation({ transcriptionData = [] }) {
 
   // Update translations when transcription data changes
   useEffect(() => {
+    console.log("🌐 LiveTranslation received data:", transcriptionData);
     if (transcriptionData.length > 0) {
-      const newTranslations = transcriptionData.map((data, index) => ({
-        id: Date.now() + index,
+      const newTranslations = transcriptionData.map((data) => ({
+        id: data.id || Date.now(),
         speaker: data.speaker || 'Speaker A',
         originalText: data.text || '',
-        translatedText: simulateTranslation(data.text || ''),
-        timestamp: new Date()
+        translatedText: data.translation || data.text || '', // Use real translation from backend
+        timestamp: data.created_at ? new Date(data.created_at) : new Date()
       }));
+      console.log("🌐 Setting translation lines:", newTranslations);
       setTranslationLines(prev => [...prev, ...newTranslations]);
     }
   }, [transcriptionData]);
@@ -68,8 +91,10 @@ function LiveTranslation({ transcriptionData = [] }) {
                   <span className="speaker-text">{line.translatedText}</span>
                 </div>
               ))
-            ) : (
-              <div className="placeholder-text">Listening for speech...</div>
+            ) :  (
+              <div className="placeholder-text">
+                {listeningText[selectedLang] || listeningText.en}
+              </div>
             )}
           </div>
         </div>
@@ -79,4 +104,3 @@ function LiveTranslation({ transcriptionData = [] }) {
 }
 
 export default LiveTranslation;
-

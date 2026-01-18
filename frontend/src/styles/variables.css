@@ -1,7 +1,6 @@
 /* ===================================================
-   VAANIYANTRA - UNIFIED THEME SYSTEM
+   VAANIYANTRA - PREMIUM DESIGN SYSTEM
    =================================================== */
-
 :root {
   /* LAYOUT DIMENSIONS */
   --sidebar-width: 260px;
@@ -10,48 +9,56 @@
   --bottom-bar-height: 60px;
   --status-strip-height: 32px;
 
-  /* FONT SYSTEM */
-  --font-display: 'Cinzel', serif;
-  --font-ui: 'Inter', system-ui, sans-serif;
+  /* FONT SYSTEM - PREMIUM INTER + MANROPE */
+  --font-primary: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-display: 'Manrope', 'Inter', sans-serif;
 
-  /* FONT SIZES */
-  --text-xs: 11px;
-  --text-sm: 13px;
-  --text-md: 14px;
-  --text-lg: 16px;
-  --text-xl: 18px;
-  --text-2xl: 22px;
+  /* FONT SCALE - PIXEL ACCURATE */
+  --text-xs: 11px;      /* Secondary text, notes, units */
+  --text-sm: 12px;      /* Labels */
+  --text-md: 13px;      /* Section titles, primary data */
+  --text-lg: 14px;      /* Body text, important numbers */
+  --text-xl: 15px;      /* Transcript text */
+  --text-2xl: 16px;     /* Hindi translation, emphasis */
+  --text-3xl: 20px;     /* App title */
 
-  /* COLOR SYSTEM - BLACK → DARK GOLD THEME */
-  /* Background */
-  --bg-primary: #000000;
-  --bg-secondary: #111111;
-  --bg-dark: #0b0b0b;
-  --bg-sidebar: linear-gradient(180deg, #060606, #000);
+  /* GOLD COLOR SYSTEM - PREMIUM */
+  --gold-main: #F4C76F;
+  --gold: #F4C76F;
+  --gold-soft: rgba(244, 199, 111, 0.6);
+  --gold-glow: rgba(244, 199, 111, 0.25);
+  --gold-light: #ffdf9a;
+  --gold-dark: #e4b85a;
 
-  /* Text */
-  --text-primary: #d6b25e;
-  --text-secondary: #cccccc;
-  --text-muted: #888888;
+  /* TEXT COLORS */
+  --text-primary: #EAE6DF;
+  --text-secondary: #A8A8A8;
+  --text-muted: #A8A8A8;
+  --white-soft: #EAE6DF;
+  --gray-soft: #A8A8A8;
 
-  /* Gold Theme */
-  --gold: #d6b25e;
-  --gold-soft: rgba(214, 178, 94, 0.45);
-  --gold-glow: rgba(214, 178, 94, 0.25);
-  --gold-light: #e4c77a;
-  --gold-dark: #c4a85a;
+  /* BACKGROUND SYSTEM - CINEMATIC */
+  --bg-primary: #0a0a0a;
+  --bg-secondary: #1a1612;
+  --bg-dark: #0a0a0a;
+  --bg-main: radial-gradient(circle at top, #1a1612 0%, #0a0a0a 55%);
+  --bg-sidebar: linear-gradient(180deg, #1a1612, #0a0a0a);
+  --panel-bg: linear-gradient(180deg, rgba(26,21,16,.9), rgba(10,10,10,.95));
 
-  /* Status Colors */
-  --status-connected: #4dc94d;
+  /* PANEL STYLES */
+  --panel-border: rgba(244,199,111,0.18);
+
+  /* STATUS COLORS */
+  --status-connected: #4cff7a;
   --status-disconnected: #c94d4d;
   --status-reconnecting: #c9a24d;
 
-  /* Borders */
-  --border-light: rgba(214,178,94,0.25);
+  /* BORDERS */
+  --border-light: rgba(244,199,111,0.18);
   --border-accent: var(--gold);
-  --border-soft: rgba(214,178,94,0.35);
+  --border-soft: rgba(244,199,111,0.18);
 
-  /* Shadows */
+  /* SHADOWS */
   --shadow-light: 0 10px 30px rgba(0,0,0,0.6);
   --shadow-glow: 0 0 12px var(--gold-glow);
 }

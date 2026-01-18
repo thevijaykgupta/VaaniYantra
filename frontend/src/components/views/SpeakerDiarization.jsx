@@ -1,6 +1,6 @@
 import { useState } from 'react';
-import OriginalTranscription from '../Transcription/OriginalTranscription';
-import LiveTranslation from '../Transcription/LiveTranslation';
+import OriginalTranscription from '../Transcription/OriginalTranscription.jsx';
+import LiveTranslation from '../Transcription/LiveTranslation.jsx';
 import './Views.css';
 
 function SpeakerDiarization({ transcriptionData = [] }) {

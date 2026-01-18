@@ -1,0 +1,102 @@
+.session-bar {
+  display: flex;
+  gap: 14px;
+  background: rgba(20,20,20,0.85);
+  border-bottom: 1px solid rgba(230,193,122,0.25);
+  color: #e6c17a;
+  font-size: 14px;
+  white-space: nowrap;
+  flex-wrap:nowrap;
+  backdrop-filter: blur(12px);
+  box-shadow: 0 1px 0 rgba(0, 0, 0, 0.05);
+  padding: 14px 18px;
+  align-items: center;
+}
+
+
+.session-subject {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.session-subject select {
+  background: transparent;
+  border: 1px solid rgba(230,193,122,0.4);
+  color: #e6c17a;
+  padding: 8px 16px;
+  border-radius: 6px;
+}
+
+.add-subject {
+  background: transparent;
+  border: 1px dashed rgba(230,193,122,0.4);
+  color: #e6c17a;
+  border-radius: 6px;
+  padding: 2px 8px;
+  cursor: pointer;
+}
+
+.divider {
+  opacity: 0.6;
+}
+
+.session-lang {
+  font-weight: 500;
+}
+
+.arrow {
+  margin: 0 4px;
+}
+
+.session-live {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: #7CFF9E;
+}
+
+.live-dot {
+  width: 8px;
+  height: 8px;
+  background: #7CFF9E;
+  border-radius: 50%;
+}
+
+.session-latency {
+  padding: 4px 10px;
+  border-radius: 999px;
+  background: rgba(230,193,122,0.15);
+  font-size: 12px;
+}
+@media(max-width:768px){
+  .language-selector,
+  .profile-pill{
+    display:none;
+  }
+  .setting-btn{
+    margin-right: 8px;
+  }
+  .session-bar{
+  flex-wrap:wrap;
+  justify-content:center;
+  gap:10px;
+}
+.session-lang{
+  width:100%;
+  text-align:center;
+}
+.session-latency{
+  font-size:12px;
+}
+
+.session-count {
+  background: rgba(244, 199, 111, 0.1);
+  color: #d4b86a;
+  padding: 4px 8px;
+  border-radius: 12px;
+  font-size: 11px;
+  font-weight: 500;
+  border: 1px solid rgba(244, 199, 111, 0.2);
+}
+}

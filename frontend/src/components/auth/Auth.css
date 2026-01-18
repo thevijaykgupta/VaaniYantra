@@ -221,3 +221,32 @@
   background: rgba(255, 255, 255, 0.1);
   color: var(--text-primary);
 }
+
+/* RESPONSIVE AUTH BUTTONS */
+@media (max-width: 768px) {
+  .auth-btn {
+    padding: 12px 16px;
+    font-size: 14px;
+  }
+
+  .auth-modal {
+    padding: 24px;
+    max-width: 380px;
+  }
+}
+
+@media (max-width: 480px) {
+  .auth-btn {
+    padding: 10px 14px;
+    font-size: 13px;
+  }
+
+  .auth-modal {
+    padding: 20px;
+    max-width: 340px;
+  }
+
+  .auth-header h2 {
+    font-size: 20px;
+  }
+}

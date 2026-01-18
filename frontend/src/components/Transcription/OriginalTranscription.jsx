@@ -1,36 +1,36 @@
 import { useState, useEffect } from 'react';
 import './Transcription.css';
 
+const listeningText = {
+  en: "Listening…",
+  hi: "सुन रहा है…",
+  ta: "கேட்கிறது…",
+  kn: "ಕೇಳುತ್ತಿದೆ…",
+  te: "వింటోంది…",
+  bn: "শুনছে…",
+  mr: "ऐकत आहे…"
+};
+
 function OriginalTranscription({ transcriptionData = [] }) {
   const [transcriptionLines, setTranscriptionLines] = useState([
     { id: 1, speaker: 'Speaker A', text: 'Listening...', timestamp: new Date() }
   ]);
   const [isExpanded, setIsExpanded] = useState(true);
 
-  // Simulate adding transcription lines
+  // Update transcription lines when data changes
   useEffect(() => {
+    console.log("📝 OriginalTranscription received data:", transcriptionData);
     if (transcriptionData.length > 0) {
       const newLines = transcriptionData.map((data) => ({
-  id: crypto.randomUUID(),
-  speaker: data.speaker || 'Speaker A',
-  text: data.text || '',
-  timestamp: new Date()
-  }));
+        id: data.id || crypto.randomUUID(),
+        speaker: data.speaker || 'Speaker A',
+        text: data.text || '',
+        timestamp: data.created_at ? new Date(data.created_at) : new Date()
+      }));
+      console.log("📝 Setting transcription lines:", newLines);
       setTranscriptionLines(prev => [...prev, ...newLines]);
     }
   }, [transcriptionData]);
-
-  // useEffect(() => {
-  //   if (transcriptionData.length > 0) {
-  //     const newLines = transcriptionData.map((data, index) => ({
-  //       id: Date.now() + index,
-  //       speaker: data.speaker || 'Speaker A',
-  //       text: data.text || '',
-  //       timestamp: new Date()
-  //     }));
-  //     setTranscriptionLines(prev => [...prev, ...newLines]);
-  //   }
-  // }, [transcriptionData]);
 
   const handleCopy = () => {
     const text = transcriptionLines.map(line => `${line.speaker}: ${line.text}`).join('\n');
