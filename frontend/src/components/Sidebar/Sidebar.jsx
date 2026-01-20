@@ -37,7 +37,7 @@ function Sidebar({ sidebarOpen, activeView, onViewChange, toggleSidebar }) {
         onClick={toggleSidebar}
         title={sidebarOpen ? "Close sidebar" : "Open sidebar"}
       >
-        {sidebarOpen ? "✕" : "☰"}
+        {sidebarOpen ? "←" : "→"}
       </button>
 
       <aside className={`sidebar ${sidebarOpen ? "open" : "collapsed"}`}>

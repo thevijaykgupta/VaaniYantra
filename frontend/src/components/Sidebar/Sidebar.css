@@ -4,42 +4,35 @@
 
 .sidebar-toggle {
   position: fixed;
-  left: 280px;
+  left: 292px;
   top: 50vh;
   transform: translateY(-50%);
-  width: 40px;
+  width: 32px;
   height: 60px;
-  background: rgba(0, 0, 0, 0.8);
-  border: 1px solid rgba(230, 193, 122, 0.5);
+  background: linear-gradient(135deg, #0e0e0e 0%, #111 100%);
+  border: 1px solid rgba(244, 199, 111, 0.3);
   border-left: none;
   border-radius: 0 8px 8px 0;
-  color: gold;
-  font-size: 18px;
+  color: #d4b86a;
+  font-size: 16px;
   cursor: pointer;
   transition: all 0.3s ease;
   backdrop-filter: blur(10px);
-  z-index: 1000;
+  z-index: 95;
   display: flex;
   align-items: center;
   justify-content: center;
+  box-shadow: 0 0 10px rgba(244, 199, 111, 0.1);
 }
 
 .sidebar-toggle:hover {
-  background: rgba(230, 193, 122, 0.15);
-  border-color: var(--gold);
-}
-
-.sidebar-toggle:active {
-  transform: translateY(-50%) scale(0.95);
+  background: rgba(244, 199, 111, 0.1);
+  border-color: rgba(244, 199, 111, 0.5);
 }
 
 /* When sidebar is collapsed, move toggle to edge */
 .sidebar-toggle.sidebar-closed {
   left: 0px;
-  background: rgba(0, 0, 0, 0.85);
-  border-left: 1px solid rgba(230, 193, 122, 0.4);
-  border-right: none;
-  border-radius: 0 8px 8px 0;
 }
 
 /* ===================================================
@@ -290,42 +283,7 @@
 }
 
 /* SIDEBAR TOGGLE BUTTON - PREMIUM RESPONSIVE */
-.sidebar-toggle {
-  position: absolute;
-  top: 50%;
-  right: -18px; /* sticks out */
-  transform: translateY(-50%);
-  width: 36px;
-  height: 36px;
-  border-radius: 50%;
-  border: 1px solid var(--gold-main);
-  background: var(--bg-primary);
-  color: var(--gold-main);
-  cursor: pointer;
-  z-index: 200;
-  box-shadow: 0 0 12px var(--gold-glow);
-  transition: all 0.2s ease;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.sidebar-toggle::before {
-  content: '☰';
-  font-size: 16px;
-  font-weight: 600;
-}
-
-.sidebar.closed + .sidebar-toggle {
-  left: 12px;
-}
-
-.sidebar-toggle:hover {
-  background: var(--gold-glow);
-  border-color: var(--gold-main);
-  box-shadow: 0 0 20px var(--gold-glow);
-  transform: translateY(-50%) scale(1.05);
-}
+/* Old conflicting styles removed */
 
 /* HEADER SIDEBAR TOGGLE BUTTON - PREMIUM RESPONSIVE */
 .sidebar-toggle-btn {
@@ -354,16 +312,6 @@
 
 /* RESPONSIVE BUTTON SIZES */
 @media (max-width: 768px) {
-  .sidebar-toggle {
-    width: 32px;
-    height: 32px;
-    right: -16px;
-  }
-
-  .sidebar-toggle::before {
-    font-size: 14px;
-  }
-
   .sidebar-toggle-btn {
     font-size: 16px;
     padding: 6px 10px;
@@ -384,17 +332,7 @@
     font-size: 12px;
   }
 
-  .sidebar-toggle-btn {
-    font-size: 14px;
-    padding: 4px 8px;
-    min-width: 32px;
-    min-height: 32px;
-    margin-right: 6px;
-  }
-}
-
-/* SIDEBAR WRAPPER */
-.sidebar-wrapper {
+  .sidebar-toggle{
   width: 260px;
   transition: width 0.3s ease;
   overflow: hidden;
