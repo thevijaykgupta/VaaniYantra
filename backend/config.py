@@ -20,8 +20,8 @@ DATABASE_URL = os.getenv("DATABASE_URL", "sqlite:///transcripts.db")
 HOST = os.getenv("HOST", "0.0.0.0")
 PORT = int(os.getenv("PORT", "8000"))
 
-# ASR chunk length in seconds
-WHISPER_CHUNK_SEC = int(os.getenv("WHISPER_CHUNK_SEC", "5"))
+# ASR chunk length in seconds (reduced for faster response)
+WHISPER_CHUNK_SEC = int(os.getenv("WHISPER_CHUNK_SEC", "1"))
 # Audio sample rate
 SAMPLE_RATE = int(os.getenv("SAMPLE_RATE", "16000"))
 ROOM_ID = "default"

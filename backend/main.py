@@ -46,6 +46,9 @@ ROOM_LANGUAGE = {}
 # Target language per room (user selected)
 ROOM_TARGET_LANGUAGE = {}
 
+# Track chunks per room for delayed language locking
+ROOM_CHUNK_COUNT = {}
+
 # Atomic ASR locks per room to prevent CPU overload
 from collections import defaultdict
 ASR_LOCKS = defaultdict(asyncio.Lock)
@@ -123,16 +126,22 @@ async def _process_audio_chunk_internal(room_id: str, pcm_bytes: bytes):
         logger.info(f"Created temp WAV file: {temp_file_path}, size: {len(pcm_bytes)} bytes")
 
         # FIX 2: MOVE WHISPER OFF EVENT LOOP TO PREVENT WS TIMEOUT
-        # STEP A2: Language detection and locking
+        # STEP A2: Language detection and locking (delayed for better accuracy)
         loop = asyncio.get_running_loop()
+
+        # Track chunk count for this room
+        chunk_count = ROOM_CHUNK_COUNT.get(room_id, 0) + 1
+        ROOM_CHUNK_COUNT[room_id] = chunk_count
+
         if room_id not in ROOM_LANGUAGE:
             segments, info = await loop.run_in_executor(
                 None,
                 lambda: asr._transcribe_sync(temp_file_path)
             )
-            if info and info.language:
+            # Lock language after 2-3 chunks for better accuracy
+            if info and info.language and chunk_count >= 2:
                 ROOM_LANGUAGE[room_id] = info.language
-                logger.info(f"🔒 Locked language for {room_id}: {info.language}")
+                logger.info(f"🔒 Locked language for {room_id} after {chunk_count} chunks: {info.language}")
         else:
             segments, info = await loop.run_in_executor(
                 None,
@@ -141,11 +150,7 @@ async def _process_audio_chunk_internal(room_id: str, pcm_bytes: bytes):
 
         logger.info(f"ASR returned {len(segments)} segments")
 
-        # Check if clients are still connected before creating transcripts
-        if not manager.has_clients(room_id):
-            logger.info(f"No clients connected for room {room_id}, skipping transcript creation")
-            return
-
+        # Always process segments - WebSocket itself is a client
         for seg in segments:
             text = seg["text"]
             logger.info(f"Segment text: (length={len(text)})")  # Avoid logging raw Unicode
@@ -242,6 +247,10 @@ async def websocket_endpoint(ws: WebSocket, room_id: str):
 
     finally:
         await manager.disconnect(ws, topic=room_id)
+        # Cleanup language lock and chunk count on disconnect
+        ROOM_LANGUAGE.pop(room_id, None)
+        ROOM_CHUNK_COUNT.pop(room_id, None)
+        logger.info(f"🧹 Cleared language lock and chunk count for {room_id}")
         try:
             await ws.close()
         except:

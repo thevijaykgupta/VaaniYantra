@@ -1,9 +1,29 @@
-import { FileText, File, Subtitles, Braces, BarChart, Users, Settings, Play } from 'lucide-react';
+import { FileText, File, Subtitles, Braces, BarChart, Users, Settings, Play, ChevronDown } from 'lucide-react';
 import { useAppState } from "../../context/AppStateContext.jsx";
+import { useState, useEffect, useRef } from 'react';
 import "./StatusFooter.css";
 
 function StatusFooter() {
   const { connectionState, demoMode, transcriptionData, addToast, setActiveView } = useAppState();
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const dropdownRef = useRef(null);
+
+  // Close dropdown when clicking outside
+  useEffect(() => {
+    function handleClickOutside(event) {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setIsDropdownOpen(false);
+      }
+    }
+
+    if (isDropdownOpen) {
+      document.addEventListener('mousedown', handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [isDropdownOpen]);
 
   const generateSRT = (data) => {
     return data.map((line, i) => {
@@ -179,22 +199,34 @@ function StatusFooter() {
 
         {/* EXPORT CONTROLS - Center right */}
         <div className="export-controls">
-          <button onClick={handleExportPDF} className="export-btn">
-            <FileText size={16} />
-            PDF
-          </button>
-          <button onClick={handleExportDOCX} className="export-btn">
-            <File size={16} />
-            DOCX
-          </button>
-          <button onClick={handleExportSRT} className="export-btn">
-            <Subtitles size={16} />
-            SRT
-          </button>
-          <button onClick={handleExportJSON} className="export-btn">
-            <Braces size={16} />
-            JSON
-          </button>
+          <div className="dropdown-container" ref={dropdownRef}>
+            <button
+              className="export-btn dropdown-toggle"
+              onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+            >
+              Export <ChevronDown size={14} />
+            </button>
+            {isDropdownOpen && (
+              <div className="dropdown-menu">
+                <button onClick={() => { handleExportPDF(); setIsDropdownOpen(false); }} className="dropdown-item">
+                  <FileText size={16} />
+                  PDF
+                </button>
+                <button onClick={() => { handleExportDOCX(); setIsDropdownOpen(false); }} className="dropdown-item">
+                  <File size={16} />
+                  DOCX
+                </button>
+                <button onClick={() => { handleExportSRT(); setIsDropdownOpen(false); }} className="dropdown-item">
+                  <Subtitles size={16} />
+                  SRT
+                </button>
+                <button onClick={() => { handleExportJSON(); setIsDropdownOpen(false); }} className="dropdown-item">
+                  <Braces size={16} />
+                  JSON
+                </button>
+              </div>
+            )}
+          </div>
         </div>
 
         {/* RIGHT CONTROLS - Connection status */}

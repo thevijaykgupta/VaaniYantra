@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import { useAppState } from "../../context/AppStateContext";
 import "./SubjectSelector.css";
 
@@ -11,22 +11,50 @@ export default function SubjectSelector() {
   } = useAppState();
 
   const [open, setOpen] = useState(false);
+  const [isAdding, setIsAdding] = useState(false);
+  const [newSubjectName, setNewSubjectName] = useState("");
+  const inputRef = useRef(null);
 
   const handleSelect = (subject) => {
     setCurrentSubject(subject);
     setOpen(false);
+    setIsAdding(false);
+    setNewSubjectName("");
   };
 
-  const handleAddSubject = () => {
-    const name = prompt("Enter new subject name");
-    if (!name) return;
+  const handleAddSubjectClick = () => {
+    setIsAdding(true);
+  };
+
+  const handleAddSubjectSubmit = (e) => {
+    e.preventDefault();
+    const name = newSubjectName.trim();
+    if (!name) {
+      setIsAdding(false);
+      setNewSubjectName("");
+      return;
+    }
 
     if (!availableSubjects.includes(name)) {
       setAvailableSubjects(prev => [...prev, name]);
     }
     setCurrentSubject(name);
     setOpen(false);
+    setIsAdding(false);
+    setNewSubjectName("");
   };
+
+  const handleCancelAdd = () => {
+    setIsAdding(false);
+    setNewSubjectName("");
+  };
+
+  // Focus input when adding
+  useEffect(() => {
+    if (isAdding && inputRef.current) {
+      inputRef.current.focus();
+    }
+  }, [isAdding]);
 
   return (
     <div className="subject-wrapper">

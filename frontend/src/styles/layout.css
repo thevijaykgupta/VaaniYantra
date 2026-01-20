@@ -18,6 +18,18 @@
   overflow: hidden;
 }
 
+/* ===================================================
+   GLOBAL PANEL ALIGNMENT (MOST IMPORTANT)
+   =================================================== */
+
+.left-sidebar,
+.right-insights {
+  margin-top: var(--panel-top-offset);
+  border-radius: var(--panel-radius);
+  box-shadow: var(--panel-shadow);
+  backdrop-filter: blur(12px);
+}
+
 .center-stack {
   margin: 0 auto;
   width: min(1100px, 100%);

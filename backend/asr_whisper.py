@@ -44,7 +44,15 @@ class WhisperASR:
     def _transcribe_sync(self, file_path: str, language=None):
         """Blocking transcription that returns (segments, info)."""
         if self.backend == "faster-whisper":
-            segments, info = self.model.transcribe(file_path, beam_size=1, language=language)
+            segments, info = self.model.transcribe(
+                file_path,
+                beam_size=5,
+                vad_filter=True,
+                vad_parameters=dict(min_silence_duration_ms=300),
+                temperature=0.0,
+                condition_on_previous_text=False,
+                language=language
+            )
             out = []
             for seg in segments:
                 out.append({"start": seg.start, "end": seg.end, "text": seg.text})

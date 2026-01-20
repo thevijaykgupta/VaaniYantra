@@ -9,6 +9,7 @@ from sqlalchemy.orm import Session, sessionmaker
 
 import config
 import models
+import os
 
 engine = create_engine(
     config.DATABASE_URL,

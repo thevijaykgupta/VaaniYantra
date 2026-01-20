@@ -61,5 +61,27 @@
   /* SHADOWS */
   --shadow-light: 0 10px 30px rgba(0,0,0,0.6);
   --shadow-glow: 0 0 12px var(--gold-glow);
+
+  /* GLOBAL PANEL ALIGNMENT (NEW) */
+  --panel-top-offset: 96px;
+  --panel-radius: 18px;
+  --panel-shadow: 0 20px 60px rgba(0,0,0,0.45);
+
+  /* FONT SYSTEM UPDATE */
+  --font-primary: "Inter", "SF Pro Text", system-ui, sans-serif;
+
+  /* SIDEBAR ENHANCEMENT */
+  --sidebar-bg: linear-gradient(180deg, rgba(30,30,30,0.95), rgba(18,18,18,0.95));
+  --sidebar-border: rgba(255,215,120,0.12);
+
+  /* TEXTURED BACKGROUND */
+  --textured-bg: linear-gradient(180deg, #2a2a2a, #1b1b1b),
+    repeating-linear-gradient(
+      45deg,
+      rgba(255,255,255,0.02),
+      rgba(255,255,255,0.02) 1px,
+      transparent 1px,
+      transparent 3px
+    );
 }
 

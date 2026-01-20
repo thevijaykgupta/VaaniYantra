@@ -10,11 +10,7 @@
   left: 0px;
   right: 0;
   height: var(--header-height);
-  background: linear-gradient(
-    to right,
-    rgba(0,0,0,0.6),
-    rgba(20,20,20,0.2)
-  );
+  background: var(--textured-bg);
   backdrop-filter: blur(10px);
   border-bottom: 1px solid var(--border-light);
   display: flex;

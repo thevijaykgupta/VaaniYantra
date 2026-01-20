@@ -140,6 +140,14 @@
 .transcription-text {
   padding: 20px;
   line-height: 1.6;
+  font-family: var(--font-primary);
+}
+
+.transcript-line {
+  font-size: 15px;
+  line-height: 1.6;
+  color: #f1e9c8;
+  margin-bottom: 12px;
 }
 
 .speaker-line {
@@ -160,6 +168,14 @@
 .speaker-text {
   color: rgba(255, 255, 255, 0.85);
   flex: 1;
+  font-size: 15px;
+  font-family: var(--font-primary);
+}
+
+.speaker-tag {
+  color: #ffd36a;
+  font-weight: 600;
+  font-size: 14px;
 }
 
 .placeholder-text {
