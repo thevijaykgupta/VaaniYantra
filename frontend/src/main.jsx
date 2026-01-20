@@ -8,10 +8,8 @@ import './styles/layout.css'
 import './styles/responsive.css'
 
 ReactDOM.createRoot(document.getElementById('root')).render(
-  <React.StrictMode>
-    <AppStateProvider>
-      <App />
-    </AppStateProvider>
-  </React.StrictMode>,
+  <AppStateProvider>
+    <App />
+  </AppStateProvider>,
 )
 

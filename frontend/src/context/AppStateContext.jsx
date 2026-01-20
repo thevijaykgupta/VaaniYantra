@@ -1,5 +1,5 @@
 import { createContext, useContext, useState, useEffect } from "react";
-import { connectAudioWS } from "../services/audioSocket";
+import { connectAudioWS, disconnectAudioSocket } from "../services/audioSocket";
 import { connectAudioSocket } from "../services/audioSocket";
 const AppStateContext = createContext();
 
@@ -128,8 +128,16 @@ export const AppStateProvider = ({ children }) => {
             status: 'disconnected'
           }));
         }
-      }
+      },
+      // Store connection reference for potential manual reconnection
+      connectAudioWS
     );
+
+    // Cleanup function to disconnect websocket on unmount
+    return () => {
+      console.log("🧹 Cleaning up WebSocket connection");
+      disconnectAudioSocket();
+    };
   },
   []);
 

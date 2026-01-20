@@ -41,19 +41,22 @@ class WhisperASR:
         """Transcribe an audio file asynchronously."""
         return await utils.run_blocking(self._transcribe_sync, file_path)
 
-    def _transcribe_sync(self, file_path: str):
-        """Blocking transcription that returns a list of segments."""
+    def _transcribe_sync(self, file_path: str, language=None):
+        """Blocking transcription that returns (segments, info)."""
         if self.backend == "faster-whisper":
-            segments, _ = self.model.transcribe(file_path, beam_size=1)
+            segments, info = self.model.transcribe(file_path, beam_size=1, language=language)
             out = []
             for seg in segments:
                 out.append({"start": seg.start, "end": seg.end, "text": seg.text})
-            return out
+            return out, info
         elif self.backend == "whisper":
-            result = self.model.transcribe(file_path)
+            result = self.model.transcribe(file_path, language=language)
             # result["segments"] is a list of dicts with start, end, text
-            return [{"start": s["start"], "end": s["end"], "text": s["text"]}
-                    for s in result["segments"]]
+            segments = [{"start": s["start"], "end": s["end"], "text": s["text"]}
+                       for s in result["segments"]]
+            # Create a simple info object for compatibility
+            info = type('Info', (), {'language': result.get('language')})()
+            return segments, info
         else:
             raise RuntimeError("No ASR backend available")
 

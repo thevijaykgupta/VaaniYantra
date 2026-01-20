@@ -20,6 +20,7 @@ class Transcript(Base):
     speaker = Column(String(32), default="speaker_1")
     text = Column(Text)
     translation = Column(Text, nullable=True)
+    detected_language = Column(String(8), nullable=True)  # Add detected language column
     created_at = Column(DateTime, default=datetime.utcnow)
 
 
@@ -28,6 +29,7 @@ class TranscriptCreate(BaseModel):
     speaker: str
     text: str
     translation: Optional[str] = None
+    detected_language: Optional[str] = None
 
 
 class TranscriptRead(BaseModel):
@@ -36,6 +38,7 @@ class TranscriptRead(BaseModel):
     speaker: str
     text: str
     translation: Optional[str] = None
+    detected_language: Optional[str] = None  # Add detected language field
     created_at: datetime
 
     class Config:

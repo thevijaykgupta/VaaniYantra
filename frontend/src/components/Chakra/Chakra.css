@@ -185,6 +185,24 @@
     inset 0 1px 0 rgba(255,255,255,0.3);
 }
 
+.capture-btn:disabled {
+  background: linear-gradient(135deg, rgba(128,128,128,0.5), rgba(96,96,96,0.4));
+  border-color: rgba(128,128,128,0.3);
+  cursor: not-allowed;
+  opacity: 0.6;
+  transform: none;
+  box-shadow:
+    0 2px 8px rgba(128,128,128,0.2),
+    inset 0 1px 0 rgba(255,255,255,0.1);
+}
+
+.capture-btn:disabled:hover {
+  transform: none;
+  box-shadow:
+    0 2px 8px rgba(128,128,128,0.2),
+    inset 0 1px 0 rgba(255,255,255,0.1);
+}
+
 .capture-icon {
   font-size: 18px;
   display: flex;
@@ -223,6 +241,35 @@
   50% {
     opacity: 0.6;
     transform: scale(1.2);
+  }
+}
+
+.connection-indicator {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: rgba(255,193,7,0.9);
+  font-size: 12px;
+  font-weight: 500;
+  text-shadow: 0 1px 2px rgba(0,0,0,0.3);
+}
+
+.connection-dot {
+  width: 8px;
+  height: 8px;
+  background: rgba(255,193,7,0.9);
+  border-radius: 50%;
+  animation: connection-pulse 2s ease-in-out infinite;
+}
+
+@keyframes connection-pulse {
+  0%, 100% {
+    opacity: 0.6;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.3);
   }
 }
 

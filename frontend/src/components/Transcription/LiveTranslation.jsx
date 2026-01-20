@@ -47,6 +47,7 @@ try {
         speaker: data.speaker || 'Speaker A',
         originalText: data.text || '',
         translatedText: data.translation || data.text || '', // Use real translation from backend
+        detectedLanguage: data.detected_language || 'auto', // Include detected language
         timestamp: data.created_at ? new Date(data.created_at) : new Date()
       }));
       console.log("🌐 Setting translation lines:", newTranslations);
@@ -89,6 +90,9 @@ try {
                 <div key={line.id} className="speaker-line">
                   <span className="speaker-label">{line.speaker}:</span>
                   <span className="speaker-text">{line.translatedText}</span>
+                  <small className="language-label" style={{color: '#666', fontSize: '0.8em', marginLeft: '8px'}}>
+                    {line.detectedLanguage} → en
+                  </small>
                 </div>
               ))
             ) :  (

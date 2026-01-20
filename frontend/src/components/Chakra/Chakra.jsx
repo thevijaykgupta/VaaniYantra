@@ -1,7 +1,8 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import './Chakra.css';
 import chakraVideo from '../../assets/videos/vaaniyantra_bg.mp4';
 import { startMicStreaming, stopMicStreaming } from '../../services/micStreamer.js';
+import { disconnectAudioSocket } from '../../services/audioSocket.js';
 import { useAppState } from '../../context/AppStateContext.jsx';
 
 const listeningText = {
@@ -31,11 +32,18 @@ const listeningText = {
 // }
 
 function Chakra() {
-  const { connectionState, connected, reconnecting, targetLanguages, addToast } = useAppState();
+  const { connectionState, targetLanguages, addToast } = useAppState();
   const [isSpeechDetected, setIsSpeechDetected] = useState(false);
   const [speechDetectionTimeout, setSpeechDetectionTimeout] = useState(null);
   const [isRecording, setIsRecording] = useState(false);
   const [micStream, setMicStream] = useState(null);
+
+  // Ref guard to prevent accidental mic stops during normal operation
+  const isUnmountingRef = useRef(false);
+
+  // Derive connection status from connectionState
+  const isConnected = connectionState.status === 'connected';
+  const isReconnecting = connectionState.status === 'reconnecting';
 
 
   const updateSpeechDetection = (speechActive) => {
@@ -59,8 +67,8 @@ function Chakra() {
   };
 
   const startCapture = async () => {
-    // Check if websocket is connected before starting mic
-    if (!connected) {
+    // Only allow mic start when WebSocket is connected
+    if (!isConnected) {
       addToast('Please wait for connection to backend before starting audio capture', 'warning');
       return;
     }
@@ -68,28 +76,46 @@ function Chakra() {
     try {
       setIsRecording(true);
       addToast('Audio capture started', 'success');
-      // Start the audio processing with websocket status check
-      await startMicStreaming(() => connected);
+      // Microphone will only start when websocket confirms it's ready
+      await startMicStreaming();
     } catch (error) {
-      console.error('Error accessing microphone:', error);
+      console.error('Error starting microphone:', error);
       setIsRecording(false);
-      addToast('Microphone access denied. Please check permissions.', 'error');
+      if (error.message.includes('WebSocket not connected')) {
+        addToast('Please wait for connection to backend before starting audio capture', 'warning');
+      } else {
+        addToast('Microphone access denied. Please check permissions.', 'error');
+      }
     }
   };
 
   const stopCapture = () => {
+    console.log("🛑 Stopping audio capture...");
     stopMicStreaming();
     setIsRecording(false);
     addToast('Audio capture stopped', 'info');
   };
 
-  // Auto-stop recording when websocket disconnects
+  // Handle WebSocket connection changes
+  // Only stop recording on permanent disconnects, not temporary reconnects
   useEffect(() => {
-    if (!connected && isRecording) {
-      console.log("🔌 WebSocket disconnected - stopping microphone");
-      stopCapture();
+    if (!isConnected && !isReconnecting && isRecording && !isUnmountingRef.current) {
+      console.log("🔌 WebSocket permanently disconnected - stopping recording");
+      setIsRecording(false);
+      addToast('Connection lost - audio capture stopped', 'warning');
     }
-  }, [connected, isRecording]);
+  }, [isConnected, isReconnecting, isRecording, addToast]);
+
+  // Cleanup on component unmount ONLY
+  useEffect(() => {
+    return () => {
+      isUnmountingRef.current = true;
+      if (isRecording) {
+        console.log("🧹 Component truly unmounting - stopping microphone");
+        stopMicStreaming();
+      }
+    };
+  }, []); // Empty dependency array - only runs on unmount
 
   return (
     <div className="chakra-container">
@@ -98,18 +124,26 @@ function Chakra() {
         <button
           className={`capture-btn ${isRecording ? 'recording' : ''}`}
           onClick={isRecording ? stopCapture : startCapture}
+          disabled={!isConnected && !isRecording}
         >
           <div className="capture-icon">
             {isRecording ? '⏹️' : '🎤'}
           </div>
           <div className="capture-text">
-            {isRecording ? 'Stop Capture' : 'Start Capture'}
+            {isRecording ? 'Stop Capture' :
+             !isConnected ? 'Connecting...' : 'Start Capture'}
           </div>
         </button>
         {isRecording && (
           <div className="recording-indicator">
             <span className="recording-dot"></span>
             Recording...
+          </div>
+        )}
+        {!isConnected && !isRecording && (
+          <div className="connection-indicator">
+            <span className="connection-dot"></span>
+            {isReconnecting ? 'Reconnecting...' : 'Connecting to server...'}
           </div>
         )}
       </div>

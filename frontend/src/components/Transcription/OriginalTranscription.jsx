@@ -25,6 +25,7 @@ function OriginalTranscription({ transcriptionData = [] }) {
         id: data.id || crypto.randomUUID(),
         speaker: data.speaker || 'Speaker A',
         text: data.text || '',
+        detectedLanguage: data.detected_language || 'auto', // Include detected language
         timestamp: data.created_at ? new Date(data.created_at) : new Date()
       }));
       console.log("📝 Setting transcription lines:", newLines);
@@ -67,6 +68,9 @@ function OriginalTranscription({ transcriptionData = [] }) {
               <div key={line.id} className="speaker-line">
                 <span className="speaker-label">{line.speaker}:</span>
                 <span className="speaker-text">{line.text}</span>
+                <small className="language-label" style={{color: '#666', fontSize: '0.8em', marginLeft: '8px'}}>
+                  [{line.detectedLanguage}]
+                </small>
               </div>
             ))}
           </div>
