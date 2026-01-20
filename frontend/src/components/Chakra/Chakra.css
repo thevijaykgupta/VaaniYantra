@@ -11,7 +11,7 @@
   align-items: center;
   justify-content: center;
   isolation: isolate;
-  z-index: 10;
+  z-index: 20; /* Higher than background video, lower than session bar */
   transform: scale(0.92);
   opacity: 0.95;
   top: -px;
@@ -42,7 +42,7 @@
   height: 115%;
   object-fit: cover;
   background: black;
-  z-index:10;
+  z-index:5; /* Lower than session bar (50) */
   opacity: 0.9;
   filter:
     contrast(1.25)

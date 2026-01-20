@@ -66,6 +66,31 @@
   font-weight: 600;
 }
 
+.add-subject-form {
+  padding: 10px 14px;
+}
+
+.subject-input {
+  width: 100%;
+  padding: 8px 12px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--gold-soft);
+  border-radius: 6px;
+  color: var(--text-primary);
+  font-size: 14px;
+  font-family: var(--font-primary);
+}
+
+.subject-input:focus {
+  outline: none;
+  border-color: var(--gold);
+  box-shadow: 0 0 0 2px rgba(244, 199, 111, 0.2);
+}
+
+.subject-input::placeholder {
+  color: var(--text-secondary);
+}
+
 /* Overlay */
 .overlay {
   position: fixed;

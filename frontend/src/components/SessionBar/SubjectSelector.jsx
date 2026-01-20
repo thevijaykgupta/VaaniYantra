@@ -83,13 +83,27 @@ export default function SubjectSelector() {
 
           <div className="divider" />
 
-          <button
-            className="add-subject"
-            onClick={handleAddSubject}
-            type="button"
-          >
-            ＋ Add Subject
-          </button>
+          {isAdding ? (
+            <form onSubmit={handleAddSubjectSubmit} className="add-subject-form">
+              <input
+                ref={inputRef}
+                type="text"
+                value={newSubjectName}
+                onChange={(e) => setNewSubjectName(e.target.value)}
+                placeholder="Enter subject name..."
+                className="subject-input"
+                onBlur={handleCancelAdd}
+              />
+            </form>
+          ) : (
+            <button
+              className="add-subject"
+              onClick={handleAddSubjectClick}
+              type="button"
+            >
+              ＋ Add Subject
+            </button>
+          )}
         </div>
       )}
 

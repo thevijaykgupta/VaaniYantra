@@ -17,7 +17,7 @@ function Header({ onShowAuth, onLogout }) {
       {/* ================= LEFT ================= */}
       <div className="header-left">
         <div className="logo-container" onClick={goToHome} style={{cursor: 'pointer'}}>
-          <img src="/logo.svg" alt="VAANIYANTRA" className="logo" />
+          <img src="/logo.png" alt="VAANIYANTRA" className="logo" />
         </div>
 
         <div className="brand-info" onClick={goToHome} style={{cursor: 'pointer'}}>

@@ -22,7 +22,7 @@ async def test_audio_pipeline():
             print(f"📩 Connection response: {data}")
 
             # Generate some test audio data (1 second of 16kHz silence, then some noise)
-            sample_rate = 16000
+            sample_rate = 48000   #48kHz
             duration = 2  # seconds
             samples = np.zeros(sample_rate * duration, dtype=np.int16)
 

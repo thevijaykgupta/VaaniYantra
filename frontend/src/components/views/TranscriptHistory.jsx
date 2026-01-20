@@ -22,28 +22,6 @@ function TranscriptHistory() {
       .catch(err => console.error("Failed to load transcripts", err));
   }, []);
 
-  // 2️ Listen for live transcripts via WebSocket
-  // Commented out - live transcription is handled by AppStateContext
-  // useEffect(() => {
-  //   const ws = new WebSocket("ws://127.0.0.1:8000/ws/audio/classroom1");
-  //
-  //   ws.onmessage = (event) => {
-  //     try {
-  //       const msg = JSON.parse(event.data);
-  //       if (msg?.type === "transcript") {
-  //         setTranscripts(prev => {
-  //           if (prev.some(t => t.id === msg.payload.id)) return prev;
-  //           return [msg.payload, ...prev];
-  //         });
-  //       }
-  //     } catch (e) {
-  //       console.error("WS parse error", e);
-  //     }
-  //   };
-  //
-  //   return () => ws.close();
-  // }, []);
-
   // 3️ Transcript detail view - Beautiful Design
   if (selectedTranscript) {
     return (
